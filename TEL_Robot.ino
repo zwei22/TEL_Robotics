@@ -1,5 +1,6 @@
 #include <SoftwareSerial.h>
 #include "cmdParser.h"
+#include "PS2X_lib.h"
 
 SoftwareSerial BT(2,3);
 uint8_t pins[8] = {4,5,6,7,8,9,10,11};
@@ -16,10 +17,10 @@ void setup() {
   Serial2.begin(115200);
   Serial.begin(115200);
 
-  shovel.ready();
-  delay(3000);
-  shovel.idle();
   
+  arm.ready();
+  delay(2000);
+  arm.fold();
 }
 
 void loop() {
