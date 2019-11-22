@@ -1,8 +1,9 @@
 #include <Arduino.h>
-#include <LobotSerialServo.h>
+#include "LobotSerialServo.h"
 
-#define POS_CLAW_OPEN 600
-#define POS_CLAW_CLOSE 1000
+#define POS_CLAW_OPEN 700
+#define POS_CLAW_CLOSE 400
+#define POS_CLAW_PARALLEL 570
 
 #define POS_SHOVEL_DOWN 780
 #define POS_SHOVEL_UP 290
@@ -63,11 +64,30 @@ class Arm {
         claw.Init(A,ids[2]);
     }
     void clawOpen(){
-        claw.Move(POS_CLAW_OPEN,0);
+        claw.Move(POS_CLAW_OPEN,200);
     }
     void clawClose(){
-        claw.Move(POS_CLAW_CLOSE,0);
+        claw.Move(POS_CLAW_CLOSE,200);
     }
+	void ready(){
+		claw.Move(POS_CLAW_PARALLEL,500);
+		elbow.Move(0,500);
+		shoulder.Move(100,500);
+		delay(500);
+		shoulder.Move(500,500);
+		delay(500);
+		elbow.Move(960,500);
+		delay(500);
+		shoulder.Move(100,500);
+	}
+	void fold(){
+		claw.Move(POS_CLAW_PARALLEL,500);
+		shoulder.Move(500,500);
+		delay(500);
+		elbow.Move(0,500);
+		delay(1000);
+		shoulder.Move(100,500);
+	}
 
     private:
     LobotSerialServo claw;
@@ -84,10 +104,10 @@ class Shovel {
     }
 
     void shovelUp(){
-        shovel.Move(POS_SHOVEL_UPPER,500);
+        shovel.Move(POS_SHOVEL_UP,500);
     }
     void shovelDown(){
-        shovel.Move(POS_SHOVEL_LOWER,200);
+        shovel.Move(POS_SHOVEL_DOWN,200);
     }
     void ready(){
         shovelDown();

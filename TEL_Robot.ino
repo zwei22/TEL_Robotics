@@ -17,10 +17,10 @@ void setup() {
   Serial2.begin(115200);
   Serial.begin(115200);
 
-  shovel.ready();
-  delay(3000);
-  shovel.idle();
   
+  arm.ready();
+  delay(2000);
+  arm.fold();
 }
 
 void loop() {
