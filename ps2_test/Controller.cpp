@@ -17,7 +17,7 @@ void Controller::readControllerCommand()
 {
     this->ps2x_1.read_gamepad(false, this->vibrate);
     this->ps2x_2.read_gamepad(false, this->vibrate);
-    
+
     int LX_1 = int(this->ps2x_1.Analog(PSS_LX));
     int LY_1 = int(this->ps2x_1.Analog(PSS_LY));
     int RX_1 = int(this->ps2x_1.Analog(PSS_RX));
@@ -38,10 +38,10 @@ void Controller::readControllerCommand()
         {
             int motor_value[4] = {0};
             int turn_value = map(LX_1, 0, 255, -100, 100);
-            motor_value[0] = turn_value;
+            motor_value[0] = -1 * turn_value;
             motor_value[1] = turn_value;
             motor_value[2] = -1 * turn_value;
-            motor_value[3] = -1 * turn_value;
+            motor_value[3] = turn_value;
 
             this->move_all(motor_value);
         }
@@ -56,7 +56,7 @@ void Controller::readControllerCommand()
 
             if (abs(RX_1 - JOY_CENTER_RX_1) >= JOY_CENTER_THR)
             {
-                int offset_value = map(RX_1, 0, 255, -20, 20);
+                int offset_value = map(RX_1, 0, 255, -100, 100);
                 if (offset_value >= 0)
                 {
                     // motor_value[0] -= offset_value;
@@ -85,13 +85,17 @@ void Controller::readControllerCommand()
 
             this->move_all(motor_value);
         }
+        else if (this->ps2x_1.Button(PSB_L2))
+        {
+            this->brake();
+        }
         else
         {
             int motor_value[4] = {0};
             this->move_all(motor_value);
         }
     }
-    else
+    else if (this->controller_state == 1)
     {
         if (this->ps2x_1.NewButtonState() && this->ps2x_1.Button(PSB_L1))
         {
@@ -101,10 +105,10 @@ void Controller::readControllerCommand()
         {
             int motor_value[4] = {0};
             int turn_value = map(LX_1, 0, 255, -100, 100);
-            motor_value[0] = -1 * turn_value;
+            motor_value[0] = turn_value;
             motor_value[1] = -1 * turn_value;
             motor_value[2] = turn_value;
-            motor_value[3] = turn_value;
+            motor_value[3] = -1 * turn_value;
 
             this->move_all(motor_value);
         }
@@ -121,18 +125,18 @@ void Controller::readControllerCommand()
             {
                 int offset_value = map(RX_1, 0, 255, -100, 100);
                 if (offset_value >= 0)
-                {   
+                {
                     // motor_value[0] += offset_value;
                     // motor_value[3] += offset_value;
-                    motor_value[0] = int(float(motor_value[0]) * (130.0 - float(abs(offset_value))) / 100.0);
-                    motor_value[3] = int(float(motor_value[0]) * (130.0 - float(abs(offset_value))) / 100.0);
+                    motor_value[1] = int(float(motor_value[0]) * (130.0 - float(abs(offset_value))) / 100.0);
+                    motor_value[2] = int(float(motor_value[0]) * (130.0 - float(abs(offset_value))) / 100.0);
                 }
                 else
                 {
                     // motor_value[1] += offset_value;
                     // motor_value[2] += offset_value;
-                    motor_value[1] = int(float(motor_value[0]) * (130.0 - float(abs(offset_value))) / 100.0);
-                    motor_value[2] = int(float(motor_value[0]) * (130.0 - float(abs(offset_value))) / 100.0);
+                    motor_value[0] = int(float(motor_value[0]) * (130.0 - float(abs(offset_value))) / 100.0);
+                    motor_value[3] = int(float(motor_value[0]) * (130.0 - float(abs(offset_value))) / 100.0);
                 }
             }
             this->move_all(motor_value);
@@ -148,10 +152,92 @@ void Controller::readControllerCommand()
 
             this->move_all(motor_value);
         }
+        else if (this->ps2x_1.Button(PSB_L2))
+        {
+            this->brake();
+        }
         else
         {
             int motor_value[4] = {0};
             this->move_all(motor_value);
+        }
+    }
+
+    if (this->ps2x_1.Button(PSB_R2))
+    {
+        if (this->ps2x_1.NewButtonState() && this->ps2x_1.Button(PSB_SQUARE))
+        {
+            if (this->controller_arm_state == 0)
+            {
+                this->controller_arm_state = 1;
+                this->arm.ready();
+            }
+            else if (this->controller_arm_state == 1)
+            {
+                this->controller_arm_state = 2;
+                this->arm.touchSwitch();
+            }
+            else if (this->controller_arm_state == 2)
+            {
+                this->controller_arm_state = 0;
+                this->arm.fold();
+            }
+        }
+        if (this->ps2x_1.NewButtonState() && this->ps2x_1.Button(PSB_CIRCLE))
+        {
+            if (this->controller_shovel_state == 0)
+            {
+                this->controller_arm_state = 1;
+                this->shovel.ready();
+            }
+            else if (this->controller_shovel_state == 1)
+            {
+                this->controller_arm_state = 0;
+                this->shovel.idle();
+            }
+        }
+    }
+    else
+    {
+        if (this->ps2x_1.NewButtonState() && this->ps2x_1.Button(PSB_SQUARE))
+        {
+            if (this->controller_arm_state == 1)
+            {
+                this->arm.pick();
+            }
+        }
+        if (this->ps2x_1.NewButtonState() && this->ps2x_1.Button(PSB_CIRCLE))
+        {
+            if (this->controller_shovel_state == 1)
+            {
+                this->shovel.pick();
+            }
+        }
+        if (ps2x_1.Button(PSB_PAD_UP))
+        {
+            if (this->controller_shovel_state == 1)
+            {
+                this->shovel.move_up();
+            }
+        }
+        else if (ps2x_1.Button(PSB_PAD_DOWN))
+        {
+            if (this->controller_shovel_state == 1)
+            {
+                this->shovel.move_down();
+            }
+        }
+        if(this->ps2x_1.NewButtonState() && this->ps2x_1.Button(PSB_R1)){
+            if (this->controller_bucket_state == 0)
+            {
+                this->controller_bucket_state = 1;
+                this->bucket.open();
+            }
+            else if (this->controller_bucket_state == 1)
+            {
+                this->controller_bucket_state = 0;
+                this->bucket.close();
+            }
         }
     }
 }
@@ -245,6 +331,10 @@ void Controller::init(int PS2_BUTTON_PIN, int PS2_GND_1, int PS2_VCC_1, int PS2_
     digitalWrite(PS2_VCC_1, LOW);
     digitalWrite(PS2_GND_2, LOW);
     digitalWrite(PS2_VCC_2, LOW);
+
+    this->arm.init(Serial2, this->armIds);
+    this->shovel.init(Serial2, this->shovelIds);
+    this->bucket.init(Serial2, this->bucketIds);
 
     ClickButton button1(PS2_BUTTON_PIN, LOW, CLICKBTN_PULLUP);
     button1.longClickTime = 10;

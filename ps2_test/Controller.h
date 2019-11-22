@@ -1,5 +1,5 @@
 #include "PS2X_lib.h" //for v1.6
-
+#include "cmdParser.h"
 
 class Controller
 {
@@ -16,22 +16,38 @@ public:
     }
     void readControllerTest(PS2X &ps2x, int &error);
     void readControllerCommand();
-    void move_all(int motor_value[]){
-        for (int i=0; i<4; ++i){
-            if(motor_value[i]>100) motor_value[i] = 100;
-            if(motor_value[i]<-100) motor_value[i] = -100;
+    void move_all(int motor_value[])
+    {
+        for (int i = 0; i < 4; ++i)
+        {
+            if (motor_value[i] > 100)
+                motor_value[i] = 100;
+            if (motor_value[i] < -100)
+                motor_value[i] = -100;
 
-            if(motor_value[i] >=0){
-                int motort_output = map(motor_value[i],0 ,100, 0, 255);
-                analogWrite(body_pins[i*2], motort_output);
-                analogWrite(body_pins[i*2+1], 0);
-            }else{
-                int motort_output = map(-1*motor_value[i],0 ,100, 0, 255);
-                analogWrite(body_pins[i*2+1], motort_output);
-                analogWrite(body_pins[i*2], 0);
+            if (motor_value[i] >= 0)
+            {
+                int motort_output = map(motor_value[i], 0, 100, 0, 255);
+                analogWrite(body_pins[i * 2], motort_output);
+                analogWrite(body_pins[i * 2 + 1], 0);
             }
-        } 
+            else
+            {
+                int motort_output = map(-1 * motor_value[i], 0, 100, 0, 255);
+                analogWrite(body_pins[i * 2 + 1], motort_output);
+                analogWrite(body_pins[i * 2], 0);
+            }
+        }
     }
+    void brake()
+    {
+        for (int i = 0; i < 8; ++i)
+        {
+            analogWrite(body_pins[i], 255);
+        }
+        Serial.println("BRAKE!");
+    }
+
 private:
     PS2X ps2x_1; // create PS2 Controller Class
     PS2X ps2x_2; // create PS2 Controller Class
@@ -43,6 +59,17 @@ private:
     byte vibrate = 0;
     bool pressures = false;
     bool rumble = false;
-    int controller_state = 0;
     uint8_t body_pins[8] = {4, 5, 6, 7, 8, 9, 10, 11};
+    uint8_t armIds[3] = {0, 1, 2};
+    Arm arm;
+    uint8_t shovelIds[3] = {3, 4, 5};
+    Shovel shovel;
+    uint8_t bucketIds[2] = {6, 7};
+    Bucket bucket;
+
+    int controller_state = 0;
+
+    int controller_arm_state = 0;
+    int controller_shovel_state = 0;
+    int controller_bucket_state = 0;
 };
