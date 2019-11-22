@@ -1,6 +1,5 @@
 #include "PS2X_lib.h" //for v1.6
 
-
 class Controller
 {
 public:
@@ -16,22 +15,7 @@ public:
     }
     void readControllerTest(PS2X &ps2x, int &error);
     void readControllerCommand();
-    void move_all(int motor_value[]){
-        for (int i=0; i<4; ++i){
-            if(motor_value[i]>100) motor_value[i] = 100;
-            if(motor_value[i]<-100) motor_value[i] = -100;
-
-            if(motor_value[i] >=0){
-                int motort_output = map(motor_value[i],0 ,100, 0, 255);
-                analogWrite(body_pins[i*2], motort_output);
-                analogWrite(body_pins[i*2+1], 0);
-            }else{
-                int motort_output = map(-1*motor_value[i],0 ,100, 0, 255);
-                analogWrite(body_pins[i*2+1], motort_output);
-                analogWrite(body_pins[i*2], 0);
-            }
-        } 
-    }
+    
 private:
     PS2X ps2x_1; // create PS2 Controller Class
     PS2X ps2x_2; // create PS2 Controller Class
@@ -43,6 +27,4 @@ private:
     byte vibrate = 0;
     bool pressures = false;
     bool rumble = false;
-    int controller_state = 0;
-    uint8_t body_pins[8] = {4, 5, 6, 7, 8, 9, 10, 11};
 };

@@ -1,20 +1,20 @@
 #include "PS2X_lib.h" //for v1.6
 #include "Controller.h"
 
-#define PS2_GND_1 8
-#define PS2_VCC_1 9
-#define PS2_DAT_1 10
-#define PS2_CMD_1 11
-#define PS2_SEL_1 12
-#define PS2_CLK_1 13
+#define PS2_GND_1 22
+#define PS2_VCC_1 24
+#define PS2_DAT_1 26
+#define PS2_CMD_1 28
+#define PS2_SEL_1 30
+#define PS2_CLK_1 32
 
-#define PS2_GND_2 2
-#define PS2_VCC_2 3
-#define PS2_DAT_2 4
-#define PS2_CMD_2 5
-#define PS2_SEL_2 6
-#define PS2_CLK_2 7
-#define PS2_BUTTON_PIN A0
+#define PS2_GND_2 23
+#define PS2_VCC_2 25
+#define PS2_DAT_2 27
+#define PS2_CMD_2 29
+#define PS2_SEL_2 31
+#define PS2_CLK_2 33
+#define PS2_BUTTON_PIN 53
 
 Controller mycontroller;
 
@@ -27,6 +27,6 @@ void setup()
 
 void loop()
 {
-  mycontroller.print();
+  mycontroller.readControllerCommand();
   delay(10);
 }
