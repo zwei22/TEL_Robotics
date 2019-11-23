@@ -18,7 +18,8 @@
 #define POS_ARM_SHOULDER_MAX 1000
 #define POS_ARM_SHOULDER_MIN 100
 
-#define D_POS 5
+#define DX_ARM 5
+#define DX_CLAW 3
 /****************************************************************************************/
 // Shovel
 #define POS_SHOVEL_DOWN 300
@@ -113,6 +114,8 @@ public:
 
     void clawOpen();
     void clawClose();
+    void clawOpenDx();
+    void clawCloseDx();
     void readyMode(int from_fold = 0);
     void foldMode();
     void switchMode();
@@ -128,7 +131,8 @@ private:
     LobotSerialServo claw;
     LobotSerialServo elbow;
     LobotSerialServo shoulder;
-    int _shoulder_pos;
+    uint16_t _shoulder_pos;
+    uint16_t _claw_pos;
 };
 
 class Shovel

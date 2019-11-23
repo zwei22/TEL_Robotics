@@ -12,12 +12,35 @@ void Arm::init(HardwareSerial &A, uint8_t ids[])
 void Arm::clawOpen()
 {
     claw.Move(POS_CLAW_OPEN, 200);
+    _claw_pos = POS_CLAW_OPEN;
 }
 
 void Arm::clawClose()
 {
     claw.Move(POS_CLAW_CLOSE, 200);
+    _claw_pos = POS_CLAW_CLOSE;
 }
+
+void Arm::clawOpenDx()
+{
+    int new_pos = _claw_pos + DX_CLAW;
+    if (new_pos <= POS_CLAW_OPEN && new_pos >= POS_CLAW_CLOSE)
+    {
+        _claw_pos = new_pos;
+        claw.Move(_claw_pos, 0);
+    }
+}
+
+void Arm::clawCloseDx()
+{
+    int new_pos = _claw_pos - DX_CLAW;
+    if (new_pos <= POS_CLAW_OPEN && new_pos >= POS_CLAW_CLOSE)
+    {
+        _claw_pos = new_pos;
+        claw.Move(_claw_pos, 0);
+    }
+}
+
 
 void Arm::readyMode(int from_fold)
 {
@@ -33,6 +56,7 @@ void Arm::readyMode(int from_fold)
     delay(500);
     shoulder.Move(POS_ARM_SHOULDER_V, 500);
     claw.Move(POS_CLAW_PARALLEL, 500);
+    _claw_pos = POS_CLAW_PARALLEL;
 }
 
 void Arm::foldMode()
@@ -71,6 +95,7 @@ void Arm::catchMode(int from_fold)
     elbow.Move(POS_ARM_ELBOW_V, 500);
     claw.Move(POS_CLAW_OPEN, 500);
     _shoulder_pos = POS_ARM_SHOULDER_H;
+    _claw_pos = POS_CLAW_OPEN;
 }
 
 void Arm::put()
@@ -86,7 +111,7 @@ void Arm::put()
 }
 
 void Arm::verticalUp() {
-    int new_pos = _shoulder_pos + D_POS;
+    int new_pos = _shoulder_pos + DX_ARM;
     uint16_t elbow_pos = POS_ARM_SHOULDER_H + POS_ARM_ELBOW_V - new_pos;
     if (new_pos <= POS_ARM_SHOULDER_MAX && new_pos >= POS_ARM_SHOULDER_MIN &&
         elbow_pos <= POS_ARM_ELBOW_MAX && elbow_pos >= POS_ARM_ELBOW_MIN)
@@ -98,7 +123,7 @@ void Arm::verticalUp() {
 }
 
 void Arm::verticalDown() {
-    int new_pos = _shoulder_pos - D_POS;
+    int new_pos = _shoulder_pos - DX_ARM;
     uint16_t elbow_pos = POS_ARM_SHOULDER_H + POS_ARM_ELBOW_V - new_pos;
     if (new_pos <= POS_ARM_SHOULDER_MAX && new_pos >= POS_ARM_SHOULDER_MIN &&
         elbow_pos <= POS_ARM_ELBOW_MAX && elbow_pos >= POS_ARM_ELBOW_MIN)
@@ -110,7 +135,7 @@ void Arm::verticalDown() {
 }
 
 void Arm::horizontalUp() {
-    int new_pos = _shoulder_pos + D_POS;
+    int new_pos = _shoulder_pos + DX_ARM;
     uint16_t elbow_pos = POS_ARM_SHOULDER_V + POS_ARM_ELBOW_H - new_pos;
     if (new_pos <= POS_ARM_SHOULDER_MAX && new_pos >= POS_ARM_SHOULDER_MIN &&
         elbow_pos <= POS_ARM_ELBOW_MAX && elbow_pos >= POS_ARM_ELBOW_MIN)
@@ -122,7 +147,7 @@ void Arm::horizontalUp() {
 }
 
 void Arm::horizontalDown() {
-    int new_pos = _shoulder_pos - D_POS;
+    int new_pos = _shoulder_pos - DX_ARM;
     uint16_t elbow_pos = POS_ARM_SHOULDER_V + POS_ARM_ELBOW_H - new_pos;
     if (new_pos <= POS_ARM_SHOULDER_MAX && new_pos >= POS_ARM_SHOULDER_MIN &&
         elbow_pos <= POS_ARM_ELBOW_MAX && elbow_pos >= POS_ARM_ELBOW_MIN)
