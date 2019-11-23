@@ -1,5 +1,5 @@
 #include "PS2X_lib.h" //for v1.6
-#include "cmdParser.h"
+#include "ServoMotion.h"
 
 class Controller
 {
