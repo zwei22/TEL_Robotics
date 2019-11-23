@@ -56,7 +56,7 @@ void Arm::switchMode()
 void Arm::catchMode()
 {
     shoulder.Move(POS_ARM_SHOULDER_H, 500);
-    delay(500);
+    delay(1000);
     elbow.Move(POS_ARM_ELBOW_V, 500);
     claw.Move(POS_CLAW_OPEN, 500);
     _shoulder_pos = POS_ARM_SHOULDER_H;

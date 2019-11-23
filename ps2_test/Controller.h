@@ -77,7 +77,7 @@ private:
     uint8_t bucketIds[2] = {6, 7};
     Bucket bucket;
 
-    int controller_state = 0;
+    int controller_body_state = 0;
     int controller_state_1 = 0;
     int controller_state_2 = 1;
     int controller_arm_state = 0;
