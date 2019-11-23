@@ -312,7 +312,14 @@ void Controller::checkPlayer_1()
             }
         }
 
-        if (abs(LX_1 - JOY_CENTER_LX_1) >= JOY_CENTER_THR)
+        
+        if (this->controller_arm_shovel_state == 0)
+        {
+            if (this->ps2x_1.ButtonPressed(PSB_L1))
+            {
+                this->controller_arm_shovel_state = 1;
+            }
+            if (abs(LX_1 - JOY_CENTER_LX_1) >= JOY_CENTER_THR)
         {
             if (controller_arm_state == 2 || controller_arm_state == 1) // catch mode and ready mode
             {
@@ -326,12 +333,6 @@ void Controller::checkPlayer_1()
                 }
             }
         }
-        if (this->controller_arm_shovel_state == 0)
-        {
-            if (this->ps2x_1.ButtonPressed(PSB_L1))
-            {
-                this->controller_arm_shovel_state = 1;
-            }
             if (abs(RY_1 - JOY_CENTER_RY_1) >= JOY_CENTER_THR)
             {
                 if (controller_arm_state == 1) // ready mode
@@ -373,11 +374,11 @@ void Controller::checkPlayer_1()
                 {
                     if (RY_1 - JOY_CENTER_RY_1 > 0)
                     {
-                        //RY down
+                        shovel.shoulderDown();
                     }
                     else
                     {
-                        //RY up
+                        shovel.shoulderUp();
                     }
                 }
             }
@@ -387,13 +388,21 @@ void Controller::checkPlayer_1()
                 {
                     if (LX_1 - JOY_CENTER_LX_1 > 0)
                     {
-                        // LX right
+                        shovel.elbowDown();
                     }
                     else
                     {
-                        // LX left
+                        shovel.elbowUp();
                     }
                 }
+            }
+            if(ps2x_1.Button(PSB_PAD_UP))
+            {
+                shovel.move_up();
+            }
+            else if(ps2x_1.Button(PSB_PAD_DOWN))
+            {
+                shovel.move_down();
             }
         }
     }

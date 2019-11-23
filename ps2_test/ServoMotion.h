@@ -30,14 +30,14 @@
 
 #define POS_SHOVEL_ELBOW_MIN 90
 #define POS_SHOVEL_ELBOW_MAX 1000
-#define POS_SHOVEL_ELBOW_H 430
-#define POS_SHOVEL_ELBOW_READY 430
+#define POS_SHOVEL_ELBOW_H 560
+#define POS_SHOVEL_ELBOW_READY 360
 
 #define POS_SHOVEL_SHOULDER_MIN 90
 #define POS_SHOVEL_SHOULDER_MAX 1000
 #define POS_SHOVEL_SHOULDER_H 850
 
-#define DX_SHOUDER 3
+#define DX_SHOULDER 2
 #define DX_ELBOW 5
 /****************************************************************************************/
 // Bucket
@@ -175,7 +175,7 @@ private:
     LobotSerialServo elbow;
     LobotSerialServo shoulder;
     uint16_t _shovel_pos;
-    unit16_t _shoulder_pos;
+    uint16_t _shoulder_pos;
     uint16_t _elbow_pos;
 };
 

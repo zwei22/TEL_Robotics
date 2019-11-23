@@ -70,6 +70,9 @@ void Arm::foldMode()
     elbow.Move(POS_ARM_ELBOW_FOLD, 500);
 
     _shoulder_pos = POS_ARM_SHOULDER_MIN;
+    delay(1000);
+    shoulder.Unload();
+    elbow.Unload();
 }
 
 void Arm::pick()
@@ -198,7 +201,7 @@ void Shovel::readyMode()
     shoulder.Move(POS_SHOVEL_SHOULDER_H, 500);
     delay(500);
     elbow.Move(POS_SHOVEL_ELBOW_READY, 500);
-    _shovel_pos = POS_SHOVEL_SHOULDER_H;
+    _shoulder_pos = POS_SHOVEL_SHOULDER_H;
     _elbow_pos = POS_SHOVEL_ELBOW_READY;
 }
 
@@ -209,6 +212,8 @@ void Shovel::foldMode()
     shoulder.Move(POS_SHOVEL_SHOULDER_MIN, 1000);
     delay(1000);
     shovelUp();
+    elbow.Unload();
+    shoulder.Unload();
 }
 
 void Shovel::shoulderUp()
@@ -231,8 +236,8 @@ void Shovel::shoulderDown()
 
 void Shovel::elbowUp()
 {
-    int new_pos = _elbow_pos - DX_ELBOW;
-    if (new_pos > POS_SHOVEL_ELBOW_MAX || new_pos < POS_SHOVEL_SHOULDER_MIN)
+    int new_pos = _elbow_pos + DX_ELBOW;
+    if (new_pos > POS_SHOVEL_ELBOW_MAX || new_pos < POS_SHOVEL_ELBOW_MIN)
         return;
     _elbow_pos = new_pos;
     elbow.Move(_elbow_pos,0);
@@ -240,8 +245,8 @@ void Shovel::elbowUp()
 
 void Shovel::elbowDown()
 {
-    int new_pos = _elbow_pos + DX_ELBOW;
-    if (new_pos > POS_SHOVEL_ELBOW_MAX || new_pos < POS_SHOVEL_SHOULDER_MIN)
+    int new_pos = _elbow_pos - DX_ELBOW;
+    if (new_pos > POS_SHOVEL_ELBOW_MAX || new_pos < POS_SHOVEL_ELBOW_MIN)
         return;
     _elbow_pos = new_pos;
     elbow.Move(_elbow_pos,0);
@@ -300,6 +305,7 @@ void Bucket::baseUp(PS2X &ps2x)
             empty_count++;
         if (empty_count >= 3)
             break;
+        delay(10);
     }
     base.SetMode(1, 0);
     //_base_pos++;
@@ -312,8 +318,6 @@ void Bucket::baseDown(PS2X &ps2x)
     base.SetMode(1, 500);
     while (true)
     {
-        if (digitalRead(52) == 0)
-            break;
         if (!ps2x.read_gamepad(false, 0))
             continue;
         int LX_1 = int(ps2x.Analog(PSS_LX));
@@ -327,6 +331,7 @@ void Bucket::baseDown(PS2X &ps2x)
             empty_count++;
         if (empty_count >= 3)
             break;
+        delay(10);
     }
     base.SetMode(1, 0);
     //_base_pos--;
