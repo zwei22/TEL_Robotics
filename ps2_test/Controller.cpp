@@ -20,13 +20,9 @@ void Controller::readControllerCommand()
     this->checkPlayer_1();
     this->checkPlayer_2();
 }
-
+/****************************PLAY1****************************/
 void Controller::checkPlayer_2()
 {
-    int LX_2 = int(this->ps2x_2.Analog(PSS_LX));
-    int LY_2 = int(this->ps2x_2.Analog(PSS_LY));
-    int RX_2 = int(this->ps2x_2.Analog(PSS_RX));
-    int RY_2 = int(this->ps2x_2.Analog(PSS_RY));
 }
 void Controller::checkPlayer_1()
 {
@@ -46,7 +42,7 @@ void Controller::checkPlayer_1()
     {
         if ((ps2x_1.ButtonPressed(PSB_R3) && ps2x_1.Button(PSB_L3)) ||
             (ps2x_1.ButtonPressed(PSB_L3) && ps2x_1.Button(PSB_R3)))
-        // if (ps2x_1.ButtonPressed(PSB_R3) || ps2x_1.ButtonPressed(PSB_L3))
+            // if (ps2x_1.ButtonPressed(PSB_R3) || ps2x_1.ButtonPressed(PSB_L3))
             controller_state_1 = 1;
 
         int max_power_value = ps2x_1.Button(PSB_L2) ? 100 : 50;
@@ -295,53 +291,27 @@ void Controller::checkPlayer_1()
             {
                 this->bucket.baseDown(ps2x_1);
             }
-
         }
     }
     else if (controller_state_1 == 1) //player #2 finction
     {
-         if ((ps2x_1.ButtonPressed(PSB_R3) && ps2x_1.Button(PSB_L3)) ||
-             (ps2x_1.ButtonPressed(PSB_L3) && ps2x_1.Button(PSB_R3)))
-        //if (ps2x_1.ButtonPressed(PSB_R3) || ps2x_1.ButtonPressed(PSB_L3))
+        if ((ps2x_1.ButtonPressed(PSB_R3) && ps2x_1.Button(PSB_L3)) ||
+            (ps2x_1.ButtonPressed(PSB_L3) && ps2x_1.Button(PSB_R3)))
+            //if (ps2x_1.ButtonPressed(PSB_R3) || ps2x_1.ButtonPressed(PSB_L3))
             controller_state_1 = 0;
         if (ps2x_1.ButtonPressed(PSB_TRIANGLE))
         {
             arm.put();
-            if (controller_arm_state == 2) {
+            if (controller_arm_state == 2)
+            {
                 arm.catchMode();
             }
-            if (controller_arm_state == 1) {
+            if (controller_arm_state == 1)
+            {
                 arm.readyMode();
             }
         }
-        if (abs(RY_1 - JOY_CENTER_RY_1) >= JOY_CENTER_THR)
-        {
-            if (controller_arm_state == 1) // ready mode
-            {
-                //move arm up or down
-                if (RY_1 - JOY_CENTER_RY_1 > 0)
-                {
-                    arm.horizontalDown();
-                }
-                else
-                {
-                    arm.horizontalUp();
-                }
-            }
-            else if (controller_arm_state == 2) // catch mode
-            {
-                //move arm up or down
-                if (RY_1 - JOY_CENTER_RY_1 > 0)
-                {
-                    arm.verticalDown();
-                }
-                else
-                {
-                    arm.verticalUp();
-                }
-                
-            }
-        }
+
         if (abs(LX_1 - JOY_CENTER_LX_1) >= JOY_CENTER_THR)
         {
             if (controller_arm_state == 2 || controller_arm_state == 1) // catch mode and ready mode
@@ -356,8 +326,79 @@ void Controller::checkPlayer_1()
                 }
             }
         }
+        if (this->controller_arm_shovel_state == 0)
+        {
+            if (this->ps2x_1.ButtonPressed(PSB_L1))
+            {
+                this->controller_arm_shovel_state = 1;
+            }
+            if (abs(RY_1 - JOY_CENTER_RY_1) >= JOY_CENTER_THR)
+            {
+                if (controller_arm_state == 1) // ready mode
+                {
+                    //move arm up or down
+                    if (RY_1 - JOY_CENTER_RY_1 > 0)
+                    {
+                        arm.horizontalDown();
+                    }
+                    else
+                    {
+                        arm.horizontalUp();
+                    }
+                }
+                else if (controller_arm_state == 2) // catch mode
+                {
+                    //move arm up or down
+                    if (RY_1 - JOY_CENTER_RY_1 > 0)
+                    {
+                        arm.verticalDown();
+                    }
+                    else
+                    {
+                        arm.verticalUp();
+                    }
+                }
+            }
+        }
+        else if (this->controller_arm_shovel_state == 1)
+        {
+            if (this->ps2x_1.ButtonPressed(PSB_L1))
+            {
+                this->controller_arm_shovel_state = 0;
+            }
+            // controll shovel
+            if (abs(RY_1 - JOY_CENTER_RY_1) >= JOY_CENTER_THR)
+            {
+                if (controller_shovel_state == 1) // ready mode
+                {
+                    if (RY_1 - JOY_CENTER_RY_1 > 0)
+                    {
+                        //RY down
+                    }
+                    else
+                    {
+                        //RY up
+                    }
+                }
+            }
+            if (abs(LX_1 - JOY_CENTER_LX_1) >= JOY_CENTER_THR)
+            {
+                if (controller_arm_state == 2 || controller_arm_state == 1) // catch mode and ready mode
+                {
+                    if (LX_1 - JOY_CENTER_LX_1 > 0)
+                    {
+                        // LX right
+                    }
+                    else
+                    {
+                        // LX left
+                    }
+                }
+            }
+        }
     }
 }
+
 void Controller::readControllerTest(PS2X &ps2x, int &error)
 {
     if (error == 1) //skip loop if no controller found
