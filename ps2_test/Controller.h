@@ -20,6 +20,7 @@ public:
     void checkPlayer_2();
     void move_all(int motor_value[])
     {
+        Serial.print("MOVE_ALL: ");
         Serial.print(motor_value[0]);
         Serial.print(", ");
         Serial.print(motor_value[0]);
