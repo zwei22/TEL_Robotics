@@ -91,7 +91,11 @@ void Controller::readControllerCommand()
         }
         else
         {
-            int motor_value[4] = {0};
+            int motor_value[4];
+            motor_value[0] = 0;
+            motor_value[1] = 0;
+            motor_value[2] = 0;
+            motor_value[3] = 0;
             this->move_all(motor_value);
         }
     }
@@ -158,14 +162,18 @@ void Controller::readControllerCommand()
         }
         else
         {
-            int motor_value[4] = {0};
+            int motor_value[4];
+            motor_value[0] = 0;
+            motor_value[1] = 0;
+            motor_value[2] = 0;
+            motor_value[3] = 0;
             this->move_all(motor_value);
         }
     }
 
-    if (this->ps2x_1.Button(PSB_R2))
-    {
-        if (this->ps2x_1.NewButtonState() && this->ps2x_1.Button(PSB_SQUARE))
+    // if (this->ps2x_1.Button(PSB_R2))
+    // {
+        if (this->ps2x_1.NewButtonState() && this->ps2x_1.Button(PSB_TRIANGLE))
         {
             if (this->controller_arm_state == 0)
             {
@@ -183,7 +191,7 @@ void Controller::readControllerCommand()
                 this->arm.fold();
             }
         }
-        else if (this->ps2x_1.NewButtonState() && this->ps2x_1.Button(PSB_CIRCLE))
+        else if (this->ps2x_1.NewButtonState() && this->ps2x_1.Button(PSB_CROSS))
         {
             if (this->controller_shovel_state == 0)
             {
@@ -196,9 +204,9 @@ void Controller::readControllerCommand()
                 this->shovel.fold();
             }
         }
-    }
-    else
-    {
+    // }
+    // else
+    // {
         if (this->ps2x_1.NewButtonState() && this->ps2x_1.Button(PSB_SQUARE))
         {
             if (this->controller_arm_state == 1)
@@ -241,7 +249,7 @@ void Controller::readControllerCommand()
                 this->bucket.close();
             }
         }
-    }
+    // }
 }
 void Controller::readControllerTest(PS2X &ps2x, int &error)
 {

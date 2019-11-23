@@ -68,7 +68,6 @@ private:
     Bucket bucket;
 
     int controller_state = 0;
-
     int controller_arm_state = 0;
     int controller_shovel_state = 0;
     int controller_bucket_state = 0;
