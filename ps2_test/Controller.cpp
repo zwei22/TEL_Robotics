@@ -183,7 +183,7 @@ void Controller::readControllerCommand()
                 this->arm.fold();
             }
         }
-        if (this->ps2x_1.NewButtonState() && this->ps2x_1.Button(PSB_CIRCLE))
+        else if (this->ps2x_1.NewButtonState() && this->ps2x_1.Button(PSB_CIRCLE))
         {
             if (this->controller_shovel_state == 0)
             {
@@ -206,7 +206,7 @@ void Controller::readControllerCommand()
                 this->arm.pick();
             }
         }
-        if (this->ps2x_1.NewButtonState() && this->ps2x_1.Button(PSB_CIRCLE))
+        else if (this->ps2x_1.NewButtonState() && this->ps2x_1.Button(PSB_CIRCLE))
         {
             if (this->controller_shovel_state == 1)
             {
