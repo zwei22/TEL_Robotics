@@ -19,7 +19,7 @@ void Controller::readControllerCommand()
     // this->ps2x_2.read_gamepad(false, this->vibrate);
     this->checkPlayer(this->error_1, this->ps2x_1, this->controller_state_1);
     //delay(10);
-    this->checkPlayer(this->error_2, this->ps2x_2, this->controller_state_2);
+    // this->checkPlayer(this->error_2, this->ps2x_2, this->controller_state_2);
 }
 /****************************PLAY1****************************/
 
@@ -39,10 +39,10 @@ void Controller::checkPlayer(int error, PS2X &ps2x, int &controller_state)
 
     if (controller_state == 0) //player #1 finction
     {
-        if ((ps2x.ButtonPressed(PSB_R3) && ps2x.Button(PSB_L3)) ||
-            (ps2x.ButtonPressed(PSB_L3) && ps2x.Button(PSB_R3)))
+        // if ((ps2x.ButtonPressed(PSB_R3) && ps2x.Button(PSB_L3)) ||
+        //     (ps2x.ButtonPressed(PSB_L3) && ps2x.Button(PSB_R3)))
             // if (ps2x.ButtonPressed(PSB_R3) || ps2x.ButtonPressed(PSB_L3))
-            controller_state = 1;
+            // controller_state = 1;
 
         int max_power_value = ps2x.Button(PSB_L2) ? 100 : 50;
         if (this->controller_body_state == 0)
@@ -278,17 +278,29 @@ void Controller::checkPlayer(int error, PS2X &ps2x, int &controller_state)
             }
         }
     }
-    else if (controller_state == 1) //player #2 finction
-    {
-        if ((ps2x.ButtonPressed(PSB_R3) && ps2x.Button(PSB_L3)) ||
-            (ps2x.ButtonPressed(PSB_L3) && ps2x.Button(PSB_R3)))
-        {
-            //if (ps2x.ButtonPressed(PSB_R3) || ps2x.ButtonPressed(PSB_L3))
-            controller_state = 0;
-            Serial.println("change");
 
-        }
-        if (ps2x.ButtonPressed(PSB_TRIANGLE))
+    if (true)
+    // else if (controller_state == 1) //player #2 finction
+    {
+        if (this->error_2 == 1 || !this->ps2x_2.read_gamepad(false, this->vibrate))
+            return;
+
+        LX_1 = int(this->ps2x_2.Analog(PSS_LX));
+        LY_1 = int(this->ps2x_2.Analog(PSS_LY));
+        RX_1 = int(this->ps2x_2.Analog(PSS_RX));
+        RY_1 = int(this->ps2x_2.Analog(PSS_RY));
+
+        if (LX_1 == 0 && LY_1 == 0 && RX_1 == 0 && RY_1 == 0)
+            return;
+
+        // if ((this->ps2x_2.ButtonPressed(PSB_R3) && this->ps2x_2.Button(PSB_L3)) ||
+        //     (this->ps2x_2.ButtonPressed(PSB_L3) && this->ps2x_2.Button(PSB_R3)))
+        // {
+        //     //if (this->ps2x_2.ButtonPressed(PSB_R3) || this->ps2x_2.ButtonPressed(PSB_L3))
+        //     controller_state = 0;
+        //     Serial.println("change");
+        // }
+        if (this->ps2x_2.ButtonPressed(PSB_TRIANGLE))
         {
             arm.put();
 
@@ -304,7 +316,7 @@ void Controller::checkPlayer(int error, PS2X &ps2x, int &controller_state)
 
         if (this->controller_arm_shovel_state == 0)
         {
-            if (ps2x.ButtonPressed(PSB_L1))
+            if (this->ps2x_2.ButtonPressed(PSB_L1))
             {
                 this->controller_arm_shovel_state = 1;
             }
@@ -352,7 +364,7 @@ void Controller::checkPlayer(int error, PS2X &ps2x, int &controller_state)
         }
         else if (this->controller_arm_shovel_state == 1)
         {
-            if (ps2x.ButtonPressed(PSB_L1))
+            if (this->ps2x_2.ButtonPressed(PSB_L1))
             {
                 this->controller_arm_shovel_state = 0;
             }
@@ -385,11 +397,11 @@ void Controller::checkPlayer(int error, PS2X &ps2x, int &controller_state)
                     }
                 }
             }
-            if (ps2x.Button(PSB_PAD_UP))
+            if (this->ps2x_2.Button(PSB_PAD_UP))
             {
                 shovel.move_up();
             }
-            else if (ps2x.Button(PSB_PAD_DOWN))
+            else if (this->ps2x_2.Button(PSB_PAD_DOWN))
             {
                 shovel.move_down();
             }
