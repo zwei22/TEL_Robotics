@@ -193,7 +193,7 @@ void Controller::readControllerCommand()
             else if (this->controller_shovel_state == 1)
             {
                 this->controller_arm_state = 0;
-                this->shovel.idle();
+                this->shovel.fold();
             }
         }
     }
@@ -213,6 +213,7 @@ void Controller::readControllerCommand()
                 this->shovel.pick();
             }
         }
+        // move shovel
         if (ps2x_1.Button(PSB_PAD_UP))
         {
             if (this->controller_shovel_state == 1)
@@ -227,6 +228,7 @@ void Controller::readControllerCommand()
                 this->shovel.move_down();
             }
         }
+        // bucket
         if(this->ps2x_1.NewButtonState() && this->ps2x_1.Button(PSB_R1)){
             if (this->controller_bucket_state == 0)
             {
