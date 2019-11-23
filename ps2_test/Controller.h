@@ -16,8 +16,17 @@ public:
     }
     void readControllerTest(PS2X &ps2x, int &error);
     void readControllerCommand();
+    void checkPlayer_1();
+    void checkPlayer_2();
     void move_all(int motor_value[])
     {
+        Serial.print(motor_value[0]);
+        Serial.print(", ");
+        Serial.print(motor_value[0]);
+        Serial.print(", ");
+        Serial.print(motor_value[0]);
+        Serial.print(", ");
+        Serial.println(motor_value[0]);
         for (int i = 0; i < 4; ++i)
         {
             if (motor_value[i] > 100)
@@ -43,7 +52,7 @@ public:
     {
         for (int i = 0; i < 8; ++i)
         {
-            analogWrite(body_pins[i], 255);
+            digitalWrite(body_pins[i], HIGH);
         }
         Serial.println("BRAKE!");
     }

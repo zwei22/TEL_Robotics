@@ -17,16 +17,24 @@ void Controller::readControllerCommand()
 {
     this->ps2x_1.read_gamepad(false, this->vibrate);
     this->ps2x_2.read_gamepad(false, this->vibrate);
+    this->checkPlayer_1();
+    this->checkPlayer_2();
+}
+
+void Controller::checkPlayer_2()
+{
+    int LX_2 = int(this->ps2x_2.Analog(PSS_LX));
+    int LY_2 = int(this->ps2x_2.Analog(PSS_LY));
+    int RX_2 = int(this->ps2x_2.Analog(PSS_RX));
+    int RY_2 = int(this->ps2x_2.Analog(PSS_RY));
+}
+void Controller::checkPlayer_1()
+{
 
     int LX_1 = int(this->ps2x_1.Analog(PSS_LX));
     int LY_1 = int(this->ps2x_1.Analog(PSS_LY));
     int RX_1 = int(this->ps2x_1.Analog(PSS_RX));
     int RY_1 = int(this->ps2x_1.Analog(PSS_RY));
-
-    int LX_2 = int(this->ps2x_2.Analog(PSS_LX));
-    int LY_2 = int(this->ps2x_2.Analog(PSS_LY));
-    int RX_2 = int(this->ps2x_2.Analog(PSS_RX));
-    int RY_2 = int(this->ps2x_2.Analog(PSS_RY));
 
     if (this->controller_state == 0)
     {
@@ -171,8 +179,8 @@ void Controller::readControllerCommand()
         }
     }
 
-    // if (this->ps2x_1.Button(PSB_R2))
-    // {
+    if (this->ps2x_1.Button(PSB_R2))
+    {
         if (this->ps2x_1.NewButtonState() && this->ps2x_1.Button(PSB_TRIANGLE))
         {
             if (this->controller_arm_state == 0)
@@ -204,9 +212,9 @@ void Controller::readControllerCommand()
                 this->shovel.fold();
             }
         }
-    // }
-    // else
-    // {
+    }
+    else
+    {
         if (this->ps2x_1.NewButtonState() && this->ps2x_1.Button(PSB_SQUARE))
         {
             if (this->controller_arm_state == 1)
@@ -237,7 +245,8 @@ void Controller::readControllerCommand()
             }
         }
         // bucket
-        if(this->ps2x_1.NewButtonState() && this->ps2x_1.Button(PSB_R1)){
+        if (this->ps2x_1.NewButtonState() && this->ps2x_1.Button(PSB_R1))
+        {
             if (this->controller_bucket_state == 0)
             {
                 this->controller_bucket_state = 1;
@@ -249,7 +258,7 @@ void Controller::readControllerCommand()
                 this->bucket.close();
             }
         }
-    // }
+    }
 }
 void Controller::readControllerTest(PS2X &ps2x, int &error)
 {
