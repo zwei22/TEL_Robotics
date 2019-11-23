@@ -198,6 +198,8 @@ void Shovel::readyMode()
     shoulder.Move(POS_SHOVEL_SHOULDER_H, 500);
     delay(500);
     elbow.Move(POS_SHOVEL_ELBOW_READY, 500);
+    _shovel_pos = POS_SHOVEL_SHOULDER_H;
+    _elbow_pos = POS_SHOVEL_ELBOW_READY;
 }
 
 void Shovel::foldMode()
@@ -207,6 +209,42 @@ void Shovel::foldMode()
     shoulder.Move(POS_SHOVEL_SHOULDER_MIN, 1000);
     delay(1000);
     shovelUp();
+}
+
+void Shovel::shoulderUp()
+{
+    int new_pos = _shoulder_pos - DX_SHOULDER;
+    if (new_pos > POS_SHOVEL_SHOULDER_MAX || new_pos < POS_SHOVEL_SHOULDER_MIN)
+        return;
+    _shoulder_pos = new_pos;
+    shoulder.Move(_shoulder_pos,0);
+}
+
+void Shovel::shoulderDown()
+{
+    int new_pos = _shoulder_pos + DX_SHOULDER;
+    if (new_pos > POS_SHOVEL_SHOULDER_MAX || new_pos < POS_SHOVEL_SHOULDER_MIN)
+        return;
+    _shoulder_pos = new_pos;
+    shoulder.Move(_shoulder_pos,0);
+}
+
+void Shovel::elbowUp()
+{
+    int new_pos = _elbow_pos - DX_ELBOW;
+    if (new_pos > POS_SHOVEL_ELBOW_MAX || new_pos < POS_SHOVEL_SHOULDER_MIN)
+        return;
+    _elbow_pos = new_pos;
+    elbow.Move(_elbow_pos,0);
+}
+
+void Shovel::elbowDown()
+{
+    int new_pos = _elbow_pos + DX_ELBOW;
+    if (new_pos > POS_SHOVEL_ELBOW_MAX || new_pos < POS_SHOVEL_SHOULDER_MIN)
+        return;
+    _elbow_pos = new_pos;
+    elbow.Move(_elbow_pos,0);
 }
 
 void Shovel::move_up()

@@ -36,6 +36,9 @@
 #define POS_SHOVEL_SHOULDER_MIN 90
 #define POS_SHOVEL_SHOULDER_MAX 1000
 #define POS_SHOVEL_SHOULDER_H 850
+
+#define DX_SHOUDER 3
+#define DX_ELBOW 5
 /****************************************************************************************/
 // Bucket
 #define POS_DOOR_OPEN 590
@@ -162,11 +165,18 @@ public:
     void pick();
     void move_up();
     void move_down();
+    void shoulderUp();
+    void shoulderDown();
+    void elbowUp();
+    void elbowDown();
+
 private:
     LobotSerialServo shovel;
     LobotSerialServo elbow;
     LobotSerialServo shoulder;
     uint16_t _shovel_pos;
+    unit16_t _shoulder_pos;
+    uint16_t _elbow_pos;
 };
 
 class Bucket
