@@ -18,7 +18,7 @@ void Controller::readControllerCommand()
     // this->ps2x_1.read_gamepad(false, this->vibrate);
     // this->ps2x_2.read_gamepad(false, this->vibrate);
     this->checkPlayer(this->error_1, this->ps2x_1, this->controller_state_1);
-    delay(20);
+    //delay(10);
     this->checkPlayer(this->error_2, this->ps2x_2, this->controller_state_2);
 }
 /****************************PLAY1****************************/
@@ -282,11 +282,16 @@ void Controller::checkPlayer(int error, PS2X &ps2x, int &controller_state)
     {
         if ((ps2x.ButtonPressed(PSB_R3) && ps2x.Button(PSB_L3)) ||
             (ps2x.ButtonPressed(PSB_L3) && ps2x.Button(PSB_R3)))
+        {
             //if (ps2x.ButtonPressed(PSB_R3) || ps2x.ButtonPressed(PSB_L3))
             controller_state = 0;
+            Serial.println("change");
+
+        }
         if (ps2x.ButtonPressed(PSB_TRIANGLE))
         {
             arm.put();
+
             if (controller_arm_state == 2)
             {
                 arm.catchMode();

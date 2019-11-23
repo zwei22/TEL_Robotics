@@ -98,7 +98,7 @@ void Arm::put()
     delay(1000);
     shoulder.Move(POS_ARM_SHOULDER_PUT, 2000);
     elbow.Move(POS_ARM_ELBOW_MAX, 2000);
-    delay(1000);
+    delay(2000);
     claw.Move(POS_CLAW_OPEN, 500);
     delay(1000);
 }
