@@ -29,5 +29,5 @@ void setup()
 void loop()
 {
   mycontroller.readControllerCommand();
-  delay(10);
+  delay(20);
 }

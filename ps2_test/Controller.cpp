@@ -17,8 +17,9 @@ void Controller::readControllerCommand()
 {
     // this->ps2x_1.read_gamepad(false, this->vibrate);
     // this->ps2x_2.read_gamepad(false, this->vibrate);
-    this->checkPlayer(error_1, this->ps2x_1, controller_state_1);
-    this->checkPlayer(error_2, this->ps2x_2, controller_state_2);
+    this->checkPlayer(this->error_1, this->ps2x_1, this->controller_state_1);
+    delay(20);
+    this->checkPlayer(this->error_2, this->ps2x_2, this->controller_state_2);
 }
 /****************************PLAY1****************************/
 
