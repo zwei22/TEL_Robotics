@@ -187,7 +187,7 @@ void Controller::readControllerCommand()
         {
             if (this->controller_shovel_state == 0)
             {
-                this->controller_arm_state = 1;
+                this->controller_shovel_state = 1;
                 this->shovel.ready();
             }
             else if (this->controller_shovel_state == 1)
