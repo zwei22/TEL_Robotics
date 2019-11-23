@@ -1,6 +1,5 @@
 #include "ServoMotion.h"
 
-
 /****************************************************************************************/
 void Arm::init(HardwareSerial &A, uint8_t ids[])
 {
@@ -41,10 +40,10 @@ void Arm::clawCloseDx()
     }
 }
 
-
 void Arm::readyMode(int from_fold)
 {
-    if (from_fold) {
+    if (from_fold)
+    {
         claw.Move(POS_CLAW_PARALLEL, 500);
         shoulder.Move(POS_ARM_SHOULDER_V, 500);
         elbow.Move(POS_ARM_ELBOW_MIN, 500);
@@ -75,17 +74,16 @@ void Arm::foldMode()
 
 void Arm::pick()
 {
-
 }
 
 void Arm::switchMode()
 {
-    
 }
 
 void Arm::catchMode(int from_fold)
 {
-    if (from_fold) {
+    if (from_fold)
+    {
         claw.Move(POS_CLAW_PARALLEL, 500);
         shoulder.Move(POS_ARM_SHOULDER_V, 500);
         elbow.Move(POS_ARM_ELBOW_MIN, 500);
@@ -110,7 +108,8 @@ void Arm::put()
     delay(1000);
 }
 
-void Arm::verticalUp() {
+void Arm::verticalUp()
+{
     int new_pos = _shoulder_pos + DX_ARM;
     uint16_t elbow_pos = POS_ARM_SHOULDER_H + POS_ARM_ELBOW_V - new_pos;
     if (new_pos <= POS_ARM_SHOULDER_MAX && new_pos >= POS_ARM_SHOULDER_MIN &&
@@ -119,10 +118,11 @@ void Arm::verticalUp() {
         _shoulder_pos = new_pos;
         shoulder.Move(_shoulder_pos, 0);
         elbow.Move(elbow_pos, 0);
-    }  
+    }
 }
 
-void Arm::verticalDown() {
+void Arm::verticalDown()
+{
     int new_pos = _shoulder_pos - DX_ARM;
     uint16_t elbow_pos = POS_ARM_SHOULDER_H + POS_ARM_ELBOW_V - new_pos;
     if (new_pos <= POS_ARM_SHOULDER_MAX && new_pos >= POS_ARM_SHOULDER_MIN &&
@@ -134,7 +134,8 @@ void Arm::verticalDown() {
     }
 }
 
-void Arm::horizontalUp() {
+void Arm::horizontalUp()
+{
     int new_pos = _shoulder_pos + DX_ARM;
     uint16_t elbow_pos = POS_ARM_SHOULDER_V + POS_ARM_ELBOW_H - new_pos;
     if (new_pos <= POS_ARM_SHOULDER_MAX && new_pos >= POS_ARM_SHOULDER_MIN &&
@@ -143,10 +144,11 @@ void Arm::horizontalUp() {
         _shoulder_pos = new_pos;
         shoulder.Move(_shoulder_pos, 0);
         elbow.Move(elbow_pos, 0);
-    }  
+    }
 }
 
-void Arm::horizontalDown() {
+void Arm::horizontalDown()
+{
     int new_pos = _shoulder_pos - DX_ARM;
     uint16_t elbow_pos = POS_ARM_SHOULDER_V + POS_ARM_ELBOW_H - new_pos;
     if (new_pos <= POS_ARM_SHOULDER_MAX && new_pos >= POS_ARM_SHOULDER_MIN &&
@@ -182,8 +184,10 @@ void Shovel::shovelDown()
 void Shovel::shovelUpdate(int dx)
 {
     _shovel_pos += dx;
-    if (_shovel_pos <= POS_SHOVEL_DOWN) _shovel_pos = POS_SHOVEL_DOWN;
-    if (_shovel_pos >= POS_SHOVEL_UP) _shovel_pos = POS_SHOVEL_UP;
+    if (_shovel_pos <= POS_SHOVEL_DOWN)
+        _shovel_pos = POS_SHOVEL_DOWN;
+    if (_shovel_pos >= POS_SHOVEL_UP)
+        _shovel_pos = POS_SHOVEL_UP;
     shovel.Move(_shovel_pos, 0);
 }
 
@@ -217,13 +221,13 @@ void Shovel::move_down()
 
 void Shovel::pick()
 {
-
 }
 /****************************************************************************************/
 void Bucket::init(HardwareSerial &A, uint8_t ids[])
 {
     door.Init(A, ids[0]);
     base.Init(A, ids[1]);
+    pinMode(52, INPUT_PULLUP);
 }
 
 void Bucket::doorOpen()
@@ -236,29 +240,66 @@ void Bucket::doorClose()
     door.Move(POS_DOOR_CLOSE, 500);
 }
 
-void Bucket::baseUp()
+void Bucket::baseUp(PS2X &ps2x)
 {
     //if (_base_pos == 5) return;
+    int empty_count = 0;
+    base.SetMode(1, -500);
+    while (true)
+    {
+        if (digitalRead(52) == 0)
+            break;
+        if (!ps2x.read_gamepad(false, 0))
+            continue;
+        int LX_1 = int(ps2x.Analog(PSS_LX));
+        int LY_1 = int(ps2x.Analog(PSS_LY));
+        int RX_1 = int(ps2x.Analog(PSS_RX));
+        int RY_1 = int(ps2x.Analog(PSS_RY));
+        if (LX_1 == 0 && LY_1 == 0 && RX_1 == 0 && RY_1 == 0)
+            continue;
 
-    base.SetMode(1,-500);
-    delay(1000);
-    base.SetMode(1,0);
+        if (!ps2x.Button(PSB_PAD_UP))
+            empty_count++;
+        if (empty_count >= 3)
+            break;
+    }
+    base.SetMode(1, 0);
     //_base_pos++;
 }
 
-void Bucket::baseDown()
+void Bucket::baseDown(PS2X &ps2x)
 {
     //if (_base_pos == 0) return;
-    base.SetMode(1,500);
-    delay(1000);
-    base.SetMode(1,0);
+    int empty_count = 0;
+    base.SetMode(1, 500);
+    while (true)
+    {
+        if (digitalRead(52) == 0)
+            break;
+        if (!ps2x.read_gamepad(false, 0))
+            continue;
+        int LX_1 = int(ps2x.Analog(PSS_LX));
+        int LY_1 = int(ps2x.Analog(PSS_LY));
+        int RX_1 = int(ps2x.Analog(PSS_RX));
+        int RY_1 = int(ps2x.Analog(PSS_RY));
+        if (LX_1 == 0 && LY_1 == 0 && RX_1 == 0 && RY_1 == 0)
+            continue;
+
+        if (!ps2x.Button(PSB_PAD_DOWN))
+            empty_count++;
+        if (empty_count >= 3)
+            break;
+    }
+    base.SetMode(1, 0);
     //_base_pos--;
 }
 
-void Bucket::open(){
+void Bucket::open()
+{
     doorOpen();
 }
 
-void Bucket::close(){
+void Bucket::close()
+{
     doorClose();
 }
