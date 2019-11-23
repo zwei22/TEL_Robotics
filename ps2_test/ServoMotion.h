@@ -3,7 +3,7 @@
 /****************************************************************************************/
 // Arm
 #define POS_CLAW_OPEN 700
-#define POS_CLAW_CLOSE 400
+#define POS_CLAW_CLOSE 380
 #define POS_CLAW_PARALLEL 570
 
 #define POS_ARM_ELBOW_MIN 50
@@ -13,12 +13,12 @@
 #define POS_ARM_ELBOW_V 250
 
 #define POS_ARM_SHOULDER_H 500
-#define POS_ARM_SHOULDER_V 100
+#define POS_ARM_SHOULDER_V 150
 #define POS_ARM_SHOULDER_PUT 900
 #define POS_ARM_SHOULDER_MAX 1000
 #define POS_ARM_SHOULDER_MIN 100
 
-#define DX_ARM 5
+#define DX_ARM 4
 #define DX_CLAW 3
 /****************************************************************************************/
 // Shovel
@@ -185,4 +185,5 @@ public:
 private:
     LobotSerialServo base;
     LobotSerialServo door;
+    int _base_pos = 0;
 };

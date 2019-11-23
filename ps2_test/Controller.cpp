@@ -212,7 +212,7 @@ void Controller::checkPlayer_1()
                     this->controller_arm_state = 1;
                 }
             }
-            else if (this->ps2x_1.ButtonPressed(PSB_TRIANGLE))
+            else if (this->ps2x_1.ButtonPressed(PSB_SQUARE))
             {
                 if (this->controller_arm_state == 2)
                 {
@@ -259,7 +259,7 @@ void Controller::checkPlayer_1()
                 }
             }
             // move shovel
-            if (ps2x_1.Button(PSB_PAD_UP))
+            /*if (ps2x_1.Button(PSB_PAD_UP))
             {
                 if (this->controller_shovel_state == 1)
                 {
@@ -272,7 +272,7 @@ void Controller::checkPlayer_1()
                 {
                     this->shovel.move_down();
                 }
-            }
+            }*/
             // bucket
             if (this->ps2x_1.ButtonPressed(PSB_R1))
             {
@@ -287,6 +287,15 @@ void Controller::checkPlayer_1()
                     this->bucket.close();
                 }
             }
+            if (ps2x_1.ButtonPressed(PSB_PAD_UP))
+            {
+                this->bucket.baseUp();
+            }
+            else if (ps2x_1.ButtonPressed(PSB_PAD_DOWN))
+            {
+                this->bucket.baseDown();
+            }
+
         }
     }
     else if (controller_state_1 == 1) //player #2 finction
@@ -295,7 +304,16 @@ void Controller::checkPlayer_1()
              (ps2x_1.ButtonPressed(PSB_L3) && ps2x_1.Button(PSB_R3)))
         //if (ps2x_1.ButtonPressed(PSB_R3) || ps2x_1.ButtonPressed(PSB_L3))
             controller_state_1 = 0;
-
+        if (ps2x_1.ButtonPressed(PSB_TRIANGLE))
+        {
+            arm.put();
+            if (controller_arm_state == 2) {
+                arm.catchMode();
+            }
+            if (controller_arm_state == 1) {
+                arm.readyMode();
+            }
+        }
         if (abs(RY_1 - JOY_CENTER_RY_1) >= JOY_CENTER_THR)
         {
             if (controller_arm_state == 1) // ready mode

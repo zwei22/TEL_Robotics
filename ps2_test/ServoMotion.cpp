@@ -56,6 +56,7 @@ void Arm::readyMode(int from_fold)
     delay(500);
     shoulder.Move(POS_ARM_SHOULDER_V, 500);
     claw.Move(POS_CLAW_PARALLEL, 500);
+    _shoulder_pos = POS_ARM_SHOULDER_V;
     _claw_pos = POS_CLAW_PARALLEL;
 }
 
@@ -66,10 +67,10 @@ void Arm::foldMode()
     delay(500);
     elbow.Move(POS_ARM_ELBOW_MIN, 500);
     delay(1000);
-    shoulder.Move(POS_ARM_SHOULDER_V, 500);
+    shoulder.Move(POS_ARM_SHOULDER_MIN, 500);
     elbow.Move(POS_ARM_ELBOW_FOLD, 500);
 
-    _shoulder_pos = POS_ARM_SHOULDER_V;
+    _shoulder_pos = POS_ARM_SHOULDER_MIN;
 }
 
 void Arm::pick()
@@ -102,12 +103,11 @@ void Arm::put()
 {
     claw.Move(POS_CLAW_CLOSE, 500);
     delay(1000);
-    shoulder.Move(POS_ARM_SHOULDER_PUT, 1000);
-    elbow.Move(POS_ARM_ELBOW_MAX, 1000);
+    shoulder.Move(POS_ARM_SHOULDER_PUT, 2000);
+    elbow.Move(POS_ARM_ELBOW_MAX, 2000);
     delay(1000);
     claw.Move(POS_CLAW_OPEN, 500);
     delay(1000);
-    catchMode();
 }
 
 void Arm::verticalUp() {
@@ -238,18 +238,27 @@ void Bucket::doorClose()
 
 void Bucket::baseUp()
 {
-    base.Move(POS_BASE_UP, 1000);
+    //if (_base_pos == 5) return;
+
+    base.SetMode(1,-500);
+    delay(1000);
+    base.SetMode(1,0);
+    //_base_pos++;
 }
 
 void Bucket::baseDown()
 {
-    base.Move(POS_BASE_DOWN, 1000);
+    //if (_base_pos == 0) return;
+    base.SetMode(1,500);
+    delay(1000);
+    base.SetMode(1,0);
+    //_base_pos--;
 }
 
 void Bucket::open(){
-    this->doorOpen();
+    doorOpen();
 }
 
 void Bucket::close(){
-    this->doorClose();
+    doorClose();
 }
