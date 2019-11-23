@@ -8,13 +8,17 @@
 
 #define POS_ARM_ELBOW_MIN 50
 #define POS_ARM_ELBOW_MAX 1000
+#define POS_ARM_ELBOW_H 1000
 #define POS_ARM_ELBOW_FOLD 150
 #define POS_ARM_ELBOW_V 250
 
 #define POS_ARM_SHOULDER_H 500
 #define POS_ARM_SHOULDER_V 100
-#define POS_ARM_SHOULDER_PUT 900 //upper vertical
+#define POS_ARM_SHOULDER_PUT 900
 #define POS_ARM_SHOULDER_MAX 1000
+#define POS_ARM_SHOULDER_MIN 100
+
+#define D_POS 5
 /****************************************************************************************/
 // Shovel
 #define POS_SHOVEL_DOWN 300
@@ -109,14 +113,16 @@ public:
 
     void clawOpen();
     void clawClose();
-    void readyMode();
+    void readyMode(int from_fold = 0);
     void foldMode();
     void switchMode();
     void put();
     void pick();
-    void catchMode();
+    void catchMode(int from_fold = 0);
     void verticalUp();
     void verticalDown();
+    void horizontalUp();
+    void horizontalDown();
 
 private:
     LobotSerialServo claw;

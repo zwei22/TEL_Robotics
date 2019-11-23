@@ -19,17 +19,20 @@ void Arm::clawClose()
     claw.Move(POS_CLAW_CLOSE, 200);
 }
 
-void Arm::readyMode()
+void Arm::readyMode(int from_fold)
 {
-    claw.Move(POS_CLAW_PARALLEL, 500);
-    shoulder.Move(POS_ARM_SHOULDER_V, 500);
-    elbow.Move(POS_ARM_ELBOW_MIN, 500);
-    delay(500);
+    if (from_fold) {
+        claw.Move(POS_CLAW_PARALLEL, 500);
+        shoulder.Move(POS_ARM_SHOULDER_V, 500);
+        elbow.Move(POS_ARM_ELBOW_MIN, 500);
+        delay(500);
+    }
     shoulder.Move(POS_ARM_SHOULDER_H, 500);
     delay(500);
     elbow.Move(POS_ARM_ELBOW_MAX, 500);
     delay(500);
     shoulder.Move(POS_ARM_SHOULDER_V, 500);
+    claw.Move(POS_CLAW_PARALLEL, 500);
 }
 
 void Arm::foldMode()
@@ -41,6 +44,8 @@ void Arm::foldMode()
     delay(1000);
     shoulder.Move(POS_ARM_SHOULDER_V, 500);
     elbow.Move(POS_ARM_ELBOW_FOLD, 500);
+
+    _shoulder_pos = POS_ARM_SHOULDER_V;
 }
 
 void Arm::pick()
@@ -53,8 +58,14 @@ void Arm::switchMode()
     
 }
 
-void Arm::catchMode()
+void Arm::catchMode(int from_fold)
 {
+    if (from_fold) {
+        claw.Move(POS_CLAW_PARALLEL, 500);
+        shoulder.Move(POS_ARM_SHOULDER_V, 500);
+        elbow.Move(POS_ARM_ELBOW_MIN, 500);
+        delay(500);
+    }
     shoulder.Move(POS_ARM_SHOULDER_H, 500);
     delay(1000);
     elbow.Move(POS_ARM_ELBOW_V, 500);
@@ -75,23 +86,45 @@ void Arm::put()
 }
 
 void Arm::verticalUp() {
-    int new_pos = _shoulder_pos + 5;
+    int new_pos = _shoulder_pos + D_POS;
     uint16_t elbow_pos = POS_ARM_SHOULDER_H + POS_ARM_ELBOW_V - new_pos;
-    if (new_pos <= POS_ARM_SHOULDER_MAX && new_pos >= POS_ARM_SHOULDER_V &&
+    if (new_pos <= POS_ARM_SHOULDER_MAX && new_pos >= POS_ARM_SHOULDER_MIN &&
         elbow_pos <= POS_ARM_ELBOW_MAX && elbow_pos >= POS_ARM_ELBOW_MIN)
     {
         _shoulder_pos = new_pos;
         shoulder.Move(_shoulder_pos, 0);
         elbow.Move(elbow_pos, 0);
-        
-    }
-    
+    }  
 }
 
 void Arm::verticalDown() {
-    int new_pos = _shoulder_pos - 5;
+    int new_pos = _shoulder_pos - D_POS;
     uint16_t elbow_pos = POS_ARM_SHOULDER_H + POS_ARM_ELBOW_V - new_pos;
-    if (new_pos <= POS_ARM_SHOULDER_MAX && new_pos >= POS_ARM_SHOULDER_V &&
+    if (new_pos <= POS_ARM_SHOULDER_MAX && new_pos >= POS_ARM_SHOULDER_MIN &&
+        elbow_pos <= POS_ARM_ELBOW_MAX && elbow_pos >= POS_ARM_ELBOW_MIN)
+    {
+        _shoulder_pos = new_pos;
+        shoulder.Move(_shoulder_pos, 0);
+        elbow.Move(elbow_pos, 0);
+    }
+}
+
+void Arm::horizontalUp() {
+    int new_pos = _shoulder_pos + D_POS;
+    uint16_t elbow_pos = POS_ARM_SHOULDER_V + POS_ARM_ELBOW_H - new_pos;
+    if (new_pos <= POS_ARM_SHOULDER_MAX && new_pos >= POS_ARM_SHOULDER_MIN &&
+        elbow_pos <= POS_ARM_ELBOW_MAX && elbow_pos >= POS_ARM_ELBOW_MIN)
+    {
+        _shoulder_pos = new_pos;
+        shoulder.Move(_shoulder_pos, 0);
+        elbow.Move(elbow_pos, 0);
+    }  
+}
+
+void Arm::horizontalDown() {
+    int new_pos = _shoulder_pos - D_POS;
+    uint16_t elbow_pos = POS_ARM_SHOULDER_V + POS_ARM_ELBOW_H - new_pos;
+    if (new_pos <= POS_ARM_SHOULDER_MAX && new_pos >= POS_ARM_SHOULDER_MIN &&
         elbow_pos <= POS_ARM_ELBOW_MAX && elbow_pos >= POS_ARM_ELBOW_MIN)
     {
         _shoulder_pos = new_pos;

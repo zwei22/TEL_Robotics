@@ -216,8 +216,11 @@ void Controller::checkPlayer_1()
                 }
                 else
                 {
+                    if (this->controller_arm_state == 0)
+                        this->arm.readyMode(1);
+                    else
+                        this->arm.readyMode();
                     this->controller_arm_state = 1;
-                    this->arm.readyMode();
                 }
             }
             else if (this->ps2x_1.ButtonPressed(PSB_SQUARE))
@@ -242,8 +245,11 @@ void Controller::checkPlayer_1()
                 }
                 else
                 {
+                    if (this->controller_arm_state == 0)
+                        this->arm.catchMode(1);
+                    else
+                        this->arm.catchMode();
                     this->controller_arm_state = 3;
-                    this->arm.catchMode();
                 }
             }
             else if (this->ps2x_1.ButtonPressed(PSB_CIRCLE))
