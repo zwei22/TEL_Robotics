@@ -44,8 +44,8 @@ void Controller::checkPlayer_1()
 
     if (controller_state_1 == 0) //player #1 finction
     {
-        if (ps2x_1.ButtonPressed(PSB_R3) && ps2x_1.Button(PSB_L3) ||
-            ps2x_1.Button(PSB_R3) && ps2x_1.ButtonPressed(PSB_L3))
+        if ((ps2x_1.ButtonPressed(PSB_R3) && ps2x_1.Button(PSB_L3)) ||
+            (ps2x_1.Button(PSB_R3) && ps2x_1.ButtonPressed(PSB_L3)))
             controller_state_1 == 1;
 
         int max_power_value = ps2x_1.Button(PSB_L2) ? 100 : 50;
@@ -246,11 +246,6 @@ void Controller::checkPlayer_1()
                     this->arm.catchMode();
                 }
             }
-            else if (this->controller_arm_state == 1)
-            {
-                this->controller_arm_state = 2;
-                this->arm.catchMode();
-            }
             else if (this->ps2x_1.ButtonPressed(PSB_CIRCLE))
             {
                 if (this->controller_shovel_state == 0)
@@ -314,8 +309,8 @@ void Controller::checkPlayer_1()
     }
     else if (controller_state_1 == 1) //player #2 finction
     {
-        if (ps2x_1.ButtonPressed(PSB_R3) && ps2x_1.Button(PSB_L3) ||
-            ps2x_1.Button(PSB_R3) && ps2x_1.ButtonPressed(PSB_L3))
+        if ((ps2x_1.ButtonPressed(PSB_R3) && ps2x_1.Button(PSB_L3)) ||
+            (ps2x_1.Button(PSB_R3) && ps2x_1.ButtonPressed(PSB_L3)))
             controller_state_1 == 0;
 
         if (abs(RY_1 - JOY_CENTER_RX_1) >= JOY_CENTER_THR)
