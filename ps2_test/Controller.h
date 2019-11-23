@@ -16,7 +16,7 @@ public:
     }
     void readControllerTest(PS2X &ps2x, int &error);
     void readControllerCommand();
-    void checkPlayer(int error, PS2X &ps2x, int &controller_state);
+    void checkPlayer();
     void move_all(int motor_value[])
     {
         Serial.print("MOVE_ALL: ");
