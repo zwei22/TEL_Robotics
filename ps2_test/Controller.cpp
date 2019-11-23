@@ -204,17 +204,22 @@ void Controller::checkPlayer_1()
             if (this->controller_arm_state == 0)
             {
                 this->controller_arm_state = 1;
-                this->arm.ready();
+                this->arm.readyMode();
             }
             else if (this->controller_arm_state == 1)
             {
                 this->controller_arm_state = 2;
-                this->arm.touchSwitch();
+                this->arm.catchMode();
             }
             else if (this->controller_arm_state == 2)
             {
+                this->controller_arm_state = 3;
+                this->arm.put();
+            }
+            else if (this->controller_arm_state == 3)
+            {
                 this->controller_arm_state = 0;
-                this->arm.fold();
+                this->arm.foldMode();
             }
         }
         else if (this->ps2x_1.ButtonPressed(PSB_CIRCLE))
@@ -250,16 +255,16 @@ void Controller::checkPlayer_1()
         // move shovel
         if (ps2x_1.Button(PSB_PAD_UP))
         {
-            if (this->controller_shovel_state == 1)
+            if (this->controller_arm_state == 2)
             {
-                this->shovel.move_up();
+                this->arm.verticalUp();
             }
         }
         else if (ps2x_1.Button(PSB_PAD_DOWN))
         {
-            if (this->controller_shovel_state == 1)
+            if (this->controller_arm_state == 2)
             {
-                this->shovel.move_down();
+                this->arm.verticalDown();
             }
         }
         // bucket

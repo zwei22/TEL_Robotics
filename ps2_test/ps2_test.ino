@@ -20,7 +20,7 @@ Controller mycontroller;
 
 void setup()
 {
-  Serial.begin(2000000);
+  Serial.begin(9600);
   Serial2.begin(115200);
   mycontroller.init(PS2_BUTTON_PIN, PS2_GND_1, PS2_VCC_1, PS2_CLK_1, PS2_CMD_1, PS2_SEL_1, PS2_DAT_1,
             PS2_GND_2, PS2_VCC_2, PS2_CLK_2, PS2_CMD_2, PS2_SEL_2, PS2_DAT_2);

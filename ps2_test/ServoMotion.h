@@ -1,21 +1,33 @@
 #include <Arduino.h>
 #include "LobotSerialServo.h"
-
+/****************************************************************************************/
+// Arm
 #define POS_CLAW_OPEN 700
 #define POS_CLAW_CLOSE 400
 #define POS_CLAW_PARALLEL 570
 
-#define POS_ARM_SOULDER_H 500
-#define POS_ARM_SOULDER_V 100
+#define POS_ARM_ELBOW_MIN 50
+#define POS_ARM_ELBOW_MAX 1000
+#define POS_ARM_ELBOW_FOLD 150
+#define POS_ARM_ELBOW_V 250
 
+#define POS_ARM_SHOULDER_H 500
+#define POS_ARM_SHOULDER_V 100
+#define POS_ARM_SHOULDER_PUT 900 //upper vertical
+#define POS_ARM_SHOULDER_MAX 1000
+/****************************************************************************************/
+// Shovel
 #define POS_SHOVEL_DOWN 300
 #define POS_SHOVEL_UP 800
 #define POS_SHOVEL_H 400 //horizental
-#define POS_SHOVEL_ELBOW_MIN 310
+
+#define POS_SHOVEL_ELBOW_MIN 50
 #define POS_SHOVEL_ELBOW_MAX 1000
+
 #define POS_SHOVEL_SHOULDER_MIN 100
 #define POS_SHOVEL_SHOULDER_MAX 1000
-
+/****************************************************************************************/
+// Bucket
 #define POS_DOOR_OPEN 590
 #define POS_DOOR_CLOSE 190
 #define POS_BASE_UP 600
@@ -97,16 +109,20 @@ public:
 
     void clawOpen();
     void clawClose();
-    void ready();
-    void fold();
-    void touchSwitch();
+    void readyMode();
+    void foldMode();
+    void switchMode();
     void put();
     void pick();
+    void catchMode();
+    void verticalUp();
+    void verticalDown();
 
 private:
     LobotSerialServo claw;
     LobotSerialServo elbow;
     LobotSerialServo shoulder;
+    int _shoulder_pos;
 };
 
 class Shovel
