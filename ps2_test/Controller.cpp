@@ -44,12 +44,13 @@ void Controller::checkPlayer_1()
 
     if (controller_state_1 == 0) //player #1 finction
     {
-        if ((ps2x_1.ButtonPressed(PSB_R3) && ps2x_1.Button(PSB_L3)) ||
-            (ps2x_1.Button(PSB_R3) && ps2x_1.ButtonPressed(PSB_L3)))
+        // if ((ps2x_1.ButtonPressed(PSB_R3) && ps2x_1.Button(PSB_L3)) ||
+        //     (ps2x_1.ButtonPressed(PSB_L3) && ps2x_1.Button(PSB_R3)))
+        if (ps2x_1.ButtonPressed(PSB_R3) || ps2x_1.ButtonPressed(PSB_L3))
             controller_state_1 == 1;
 
         int max_power_value = ps2x_1.Button(PSB_L2) ? 100 : 50;
-        if (this->controller_body_state == 0 && !ps2x_1.NewButtonState())
+        if (this->controller_body_state == 0)
         {
             if (this->ps2x_1.ButtonPressed(PSB_L1))
             {
@@ -63,11 +64,6 @@ void Controller::checkPlayer_1()
                 motor_value[1] = turn_value;
                 motor_value[2] = -1 * turn_value;
                 motor_value[3] = turn_value;
-                Serial.println("1:");
-                Serial.println(LX_1);
-                Serial.println(LY_1);
-                Serial.println(RX_1);
-                Serial.println(RY_1);
                 this->move_all(motor_value);
             }
             else if (abs(LX_1 - JOY_CENTER_LX_1) < abs(LY_1 - JOY_CENTER_LY_1) && abs(LY_1 - JOY_CENTER_LY_1) >= JOY_CENTER_THR)
@@ -97,8 +93,6 @@ void Controller::checkPlayer_1()
                         motor_value[2] = int(float(motor_value[0]) * (150.0 - float(abs(offset_value))) / 100.0);
                     }
                 }
-                Serial.print("2");
-
                 this->move_all(motor_value);
             }
             else if (abs(RX_1 - JOY_CENTER_RX_1) >= JOY_CENTER_THR)
@@ -109,7 +103,6 @@ void Controller::checkPlayer_1()
                 motor_value[1] = -1 * turn_value;
                 motor_value[2] = -1 * turn_value;
                 motor_value[3] = turn_value;
-                Serial.print("3");
 
                 this->move_all(motor_value);
             }
@@ -124,12 +117,11 @@ void Controller::checkPlayer_1()
                 motor_value[1] = 0;
                 motor_value[2] = 0;
                 motor_value[3] = 0;
-                Serial.print("4");
 
                 this->move_all(motor_value);
             }
         }
-        else if (this->controller_body_state == 1 && !ps2x_1.NewButtonState())
+        else if (this->controller_body_state == 1)
         {
             if (this->ps2x_1.ButtonPressed(PSB_L1))
             {
@@ -143,7 +135,6 @@ void Controller::checkPlayer_1()
                 motor_value[1] = -1 * turn_value;
                 motor_value[2] = turn_value;
                 motor_value[3] = -1 * turn_value;
-                Serial.print("5");
 
                 this->move_all(motor_value);
             }
@@ -174,8 +165,6 @@ void Controller::checkPlayer_1()
                         motor_value[3] = int(float(motor_value[0]) * (150.0 - float(abs(offset_value))) / 100.0);
                     }
                 }
-                Serial.print("6");
-
                 this->move_all(motor_value);
             }
             else if (abs(RX_1 - JOY_CENTER_RX_1) >= JOY_CENTER_THR)
@@ -205,7 +194,7 @@ void Controller::checkPlayer_1()
             }
         }
 
-        else if (this->ps2x_1.Button(PSB_R2))
+        if (this->ps2x_1.Button(PSB_R2))
         {
             if (this->ps2x_1.ButtonPressed(PSB_CROSS))
             {
@@ -220,7 +209,7 @@ void Controller::checkPlayer_1()
                     this->arm.readyMode();
                 }
             }
-            else if (this->ps2x_1.ButtonPressed(PSB_SQUARE))
+            else if (this->ps2x_1.ButtonPressed(PSB_TRIANGLE))
             {
                 if (this->controller_arm_state == 2)
                 {
@@ -230,19 +219,6 @@ void Controller::checkPlayer_1()
                 else
                 {
                     this->controller_arm_state = 2;
-                    this->arm.switchMode();
-                }
-            }
-            else if (this->ps2x_1.ButtonPressed(PSB_TRIANGLE))
-            {
-                if (this->controller_arm_state == 3)
-                {
-                    this->controller_arm_state = 0;
-                    this->arm.foldMode();
-                }
-                else
-                {
-                    this->controller_arm_state = 3;
                     this->arm.catchMode();
                 }
             }
@@ -309,8 +285,9 @@ void Controller::checkPlayer_1()
     }
     else if (controller_state_1 == 1) //player #2 finction
     {
-        if ((ps2x_1.ButtonPressed(PSB_R3) && ps2x_1.Button(PSB_L3)) ||
-            (ps2x_1.Button(PSB_R3) && ps2x_1.ButtonPressed(PSB_L3)))
+        // if ((ps2x_1.ButtonPressed(PSB_R3) && ps2x_1.Button(PSB_L3)) ||
+        //     (ps2x_1.ButtonPressed(PSB_L3) && ps2x_1.Button(PSB_R3)))
+        if (ps2x_1.ButtonPressed(PSB_R3) || ps2x_1.ButtonPressed(PSB_L3))
             controller_state_1 == 0;
 
         if (abs(RY_1 - JOY_CENTER_RX_1) >= JOY_CENTER_THR)
@@ -323,9 +300,6 @@ void Controller::checkPlayer_1()
             {
                 //move arm up or down
             }
-        }
-        if (ps2x_1.ButtonPressed(PSB_L1))
-        { // catch and put
         }
         if (abs(LY_1 - JOY_CENTER_RX_1) >= JOY_CENTER_THR)
         {
