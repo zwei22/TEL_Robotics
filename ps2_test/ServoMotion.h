@@ -26,11 +26,14 @@
 #define POS_SHOVEL_UP 800
 #define POS_SHOVEL_H 400 //horizental
 
-#define POS_SHOVEL_ELBOW_MIN 50
+#define POS_SHOVEL_ELBOW_MIN 90
 #define POS_SHOVEL_ELBOW_MAX 1000
+#define POS_SHOVEL_ELBOW_H 430
+#define POS_SHOVEL_ELBOW_READY 430
 
-#define POS_SHOVEL_SHOULDER_MIN 100
+#define POS_SHOVEL_SHOULDER_MIN 90
 #define POS_SHOVEL_SHOULDER_MAX 1000
+#define POS_SHOVEL_SHOULDER_H 850
 /****************************************************************************************/
 // Bucket
 #define POS_DOOR_OPEN 590
@@ -151,9 +154,9 @@ public:
     void shovelUp();
     void shovelDown();
     void shovelUpdate(int dx);
-    void ready();
+    void readyMode();
 
-    void fold();
+    void foldMode();
     void pick();
     void move_up();
     void move_down();

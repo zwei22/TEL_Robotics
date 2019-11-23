@@ -233,12 +233,12 @@ void Controller::checkPlayer_1()
                 if (this->controller_shovel_state == 0)
                 {
                     this->controller_shovel_state = 1;
-                    this->shovel.ready();
+                    this->shovel.readyMode();
                 }
                 else if (this->controller_shovel_state == 1)
                 {
                     this->controller_shovel_state = 0;
-                    this->shovel.fold();
+                    this->shovel.foldMode();
                 }
             }
         }

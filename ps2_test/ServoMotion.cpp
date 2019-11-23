@@ -187,20 +187,20 @@ void Shovel::shovelUpdate(int dx)
     shovel.Move(_shovel_pos, 0);
 }
 
-void Shovel::ready()
+void Shovel::readyMode()
 {
     shovelDown();
     delay(1000);
-    shoulder.Move(POS_SHOVEL_SHOULDER_MAX, 200);
+    shoulder.Move(POS_SHOVEL_SHOULDER_H, 500);
     delay(500);
-    elbow.Move(POS_SHOVEL_ELBOW_MAX, 200);
+    elbow.Move(POS_SHOVEL_ELBOW_READY, 500);
 }
 
-void Shovel::fold()
+void Shovel::foldMode()
 {
-    elbow.Move(POS_SHOVEL_ELBOW_MIN, 500);
+    elbow.Move(POS_SHOVEL_ELBOW_MAX, 1000);
     delay(500);
-    shoulder.Move(POS_SHOVEL_SHOULDER_MIN, 500);
+    shoulder.Move(POS_SHOVEL_SHOULDER_MIN, 1000);
     delay(1000);
     shovelUp();
 }
