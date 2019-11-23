@@ -1,5 +1,7 @@
 #include <Arduino.h>
 #include "LobotSerialServo.h"
+#include "PS2X_lib.h" //for v1.6
+
 /****************************************************************************************/
 // Arm
 #define POS_CLAW_OPEN 700
@@ -177,8 +179,8 @@ public:
     void init(HardwareSerial &A, uint8_t ids[]);
     void doorOpen();
     void doorClose();
-    void baseUp();
-    void baseDown();
+    void baseUp(PS2X &ps2x);
+    void baseDown(PS2X &ps2x);
     void open();
     void close();
 

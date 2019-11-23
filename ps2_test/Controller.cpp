@@ -289,11 +289,11 @@ void Controller::checkPlayer_1()
             }
             if (ps2x_1.ButtonPressed(PSB_PAD_UP))
             {
-                this->bucket.baseUp();
+                this->bucket.baseUp(ps2x_1);
             }
             else if (ps2x_1.ButtonPressed(PSB_PAD_DOWN))
             {
-                this->bucket.baseDown();
+                this->bucket.baseDown(ps2x_1);
             }
 
         }
