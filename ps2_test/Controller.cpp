@@ -17,38 +17,36 @@ void Controller::readControllerCommand()
 {
     // this->ps2x_1.read_gamepad(false, this->vibrate);
     // this->ps2x_2.read_gamepad(false, this->vibrate);
-    this->checkPlayer_1();
-    this->checkPlayer_2();
+    this->checkPlayer(error_1, this->ps2x_1, controller_state_1);
+    this->checkPlayer(error_2, this->ps2x_2, controller_state_2);
 }
 /****************************PLAY1****************************/
-void Controller::checkPlayer_2()
-{
-}
-void Controller::checkPlayer_1()
+
+void Controller::checkPlayer(int error, PS2X &ps2x, int &controller_state)
 {
 
-    if (error_1 == 1 || !ps2x_1.read_gamepad(false, this->vibrate))
+    if (error == 1 || !ps2x.read_gamepad(false, this->vibrate))
         return;
 
-    int LX_1 = int(this->ps2x_1.Analog(PSS_LX));
-    int LY_1 = int(this->ps2x_1.Analog(PSS_LY));
-    int RX_1 = int(this->ps2x_1.Analog(PSS_RX));
-    int RY_1 = int(this->ps2x_1.Analog(PSS_RY));
+    int LX_1 = int(ps2x.Analog(PSS_LX));
+    int LY_1 = int(ps2x.Analog(PSS_LY));
+    int RX_1 = int(ps2x.Analog(PSS_RX));
+    int RY_1 = int(ps2x.Analog(PSS_RY));
 
     if (LX_1 == 0 && LY_1 == 0 && RX_1 == 0 && RY_1 == 0)
         return;
 
-    if (controller_state_1 == 0) //player #1 finction
+    if (controller_state == 0) //player #1 finction
     {
-        if ((ps2x_1.ButtonPressed(PSB_R3) && ps2x_1.Button(PSB_L3)) ||
-            (ps2x_1.ButtonPressed(PSB_L3) && ps2x_1.Button(PSB_R3)))
-            // if (ps2x_1.ButtonPressed(PSB_R3) || ps2x_1.ButtonPressed(PSB_L3))
-            controller_state_1 = 1;
+        if ((ps2x.ButtonPressed(PSB_R3) && ps2x.Button(PSB_L3)) ||
+            (ps2x.ButtonPressed(PSB_L3) && ps2x.Button(PSB_R3)))
+            // if (ps2x.ButtonPressed(PSB_R3) || ps2x.ButtonPressed(PSB_L3))
+            controller_state = 1;
 
-        int max_power_value = ps2x_1.Button(PSB_L2) ? 100 : 50;
+        int max_power_value = ps2x.Button(PSB_L2) ? 100 : 50;
         if (this->controller_body_state == 0)
         {
-            if (this->ps2x_1.ButtonPressed(PSB_L1))
+            if (ps2x.ButtonPressed(PSB_L1))
             {
                 this->controller_body_state = 1;
             }
@@ -102,7 +100,7 @@ void Controller::checkPlayer_1()
 
                 this->move_all(motor_value);
             }
-            // else if (this->ps2x_1.Button(PSB_L2))
+            // else if (ps2x.Button(PSB_L2))
             // {
             //     this->brake();
             // }
@@ -119,7 +117,7 @@ void Controller::checkPlayer_1()
         }
         else if (this->controller_body_state == 1)
         {
-            if (this->ps2x_1.ButtonPressed(PSB_L1))
+            if (ps2x.ButtonPressed(PSB_L1))
             {
                 this->controller_body_state = 0;
             }
@@ -174,10 +172,10 @@ void Controller::checkPlayer_1()
 
                 this->move_all(motor_value);
             }
-            else if (this->ps2x_1.Button(PSB_L2))
-            {
-                this->brake();
-            }
+            // else if (ps2x.Button(PSB_L2))
+            // {
+            //     this->brake();
+            // }
             else
             {
                 int motor_value[4];
@@ -190,9 +188,9 @@ void Controller::checkPlayer_1()
             }
         }
 
-        if (this->ps2x_1.Button(PSB_R2))
+        if (ps2x.Button(PSB_R2))
         {
-            if (this->ps2x_1.ButtonPressed(PSB_CROSS))
+            if (ps2x.ButtonPressed(PSB_CROSS))
             {
                 if (this->controller_arm_state == 1)
                 {
@@ -208,7 +206,7 @@ void Controller::checkPlayer_1()
                     this->controller_arm_state = 1;
                 }
             }
-            else if (this->ps2x_1.ButtonPressed(PSB_SQUARE))
+            else if (ps2x.ButtonPressed(PSB_SQUARE))
             {
                 if (this->controller_arm_state == 2)
                 {
@@ -224,7 +222,7 @@ void Controller::checkPlayer_1()
                     this->controller_arm_state = 2;
                 }
             }
-            else if (this->ps2x_1.ButtonPressed(PSB_CIRCLE))
+            else if (ps2x.ButtonPressed(PSB_CIRCLE))
             {
                 if (this->controller_shovel_state == 0)
                 {
@@ -240,14 +238,14 @@ void Controller::checkPlayer_1()
         }
         else
         {
-            if (this->ps2x_1.ButtonPressed(PSB_SQUARE))
+            if (ps2x.ButtonPressed(PSB_SQUARE))
             {
                 if (this->controller_arm_state == 1)
                 {
                     this->arm.pick();
                 }
             }
-            else if (this->ps2x_1.ButtonPressed(PSB_CIRCLE))
+            else if (ps2x.ButtonPressed(PSB_CIRCLE))
             {
                 if (this->controller_shovel_state == 1)
                 {
@@ -255,14 +253,14 @@ void Controller::checkPlayer_1()
                 }
             }
             // move shovel
-            /*if (ps2x_1.Button(PSB_PAD_UP))
+            /*if (ps2x.Button(PSB_PAD_UP))
             {
                 if (this->controller_shovel_state == 1)
                 {
                     this->shovel.move_up();
                 }
             }
-            else if (ps2x_1.Button(PSB_PAD_DOWN))
+            else if (ps2x.Button(PSB_PAD_DOWN))
             {
                 if (this->controller_shovel_state == 1)
                 {
@@ -270,7 +268,7 @@ void Controller::checkPlayer_1()
                 }
             }*/
             // bucket
-            if (this->ps2x_1.ButtonPressed(PSB_R1))
+            if (ps2x.ButtonPressed(PSB_R1))
             {
                 if (this->controller_bucket_state == 0)
                 {
@@ -283,23 +281,23 @@ void Controller::checkPlayer_1()
                     this->bucket.close();
                 }
             }
-            if (ps2x_1.ButtonPressed(PSB_PAD_UP))
+            if (ps2x.ButtonPressed(PSB_PAD_UP))
             {
-                this->bucket.baseUp(ps2x_1);
+                this->bucket.baseUp(ps2x);
             }
-            else if (ps2x_1.ButtonPressed(PSB_PAD_DOWN))
+            else if (ps2x.ButtonPressed(PSB_PAD_DOWN))
             {
-                this->bucket.baseDown(ps2x_1);
+                this->bucket.baseDown(ps2x);
             }
         }
     }
-    else if (controller_state_1 == 1) //player #2 finction
+    else if (controller_state == 1) //player #2 finction
     {
-        if ((ps2x_1.ButtonPressed(PSB_R3) && ps2x_1.Button(PSB_L3)) ||
-            (ps2x_1.ButtonPressed(PSB_L3) && ps2x_1.Button(PSB_R3)))
-            //if (ps2x_1.ButtonPressed(PSB_R3) || ps2x_1.ButtonPressed(PSB_L3))
-            controller_state_1 = 0;
-        if (ps2x_1.ButtonPressed(PSB_TRIANGLE))
+        if ((ps2x.ButtonPressed(PSB_R3) && ps2x.Button(PSB_L3)) ||
+            (ps2x.ButtonPressed(PSB_L3) && ps2x.Button(PSB_R3)))
+            //if (ps2x.ButtonPressed(PSB_R3) || ps2x.ButtonPressed(PSB_L3))
+            controller_state = 0;
+        if (ps2x.ButtonPressed(PSB_TRIANGLE))
         {
             arm.put();
             if (controller_arm_state == 2)
@@ -315,7 +313,7 @@ void Controller::checkPlayer_1()
         
         if (this->controller_arm_shovel_state == 0)
         {
-            if (this->ps2x_1.ButtonPressed(PSB_L1))
+            if (ps2x.ButtonPressed(PSB_L1))
             {
                 this->controller_arm_shovel_state = 1;
             }
@@ -363,7 +361,7 @@ void Controller::checkPlayer_1()
         }
         else if (this->controller_arm_shovel_state == 1)
         {
-            if (this->ps2x_1.ButtonPressed(PSB_L1))
+            if (ps2x.ButtonPressed(PSB_L1))
             {
                 this->controller_arm_shovel_state = 0;
             }
@@ -396,11 +394,11 @@ void Controller::checkPlayer_1()
                     }
                 }
             }
-            if(ps2x_1.Button(PSB_PAD_UP))
+            if(ps2x.Button(PSB_PAD_UP))
             {
                 shovel.move_up();
             }
-            else if(ps2x_1.Button(PSB_PAD_DOWN))
+            else if(ps2x.Button(PSB_PAD_DOWN))
             {
                 shovel.move_down();
             }
