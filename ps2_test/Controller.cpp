@@ -31,254 +31,310 @@ void Controller::checkPlayer_2()
 void Controller::checkPlayer_1()
 {
 
-    if (error_1 == 1 || !ps2x_1.read_gamepad(false, this->vibrate)) return;
-    
+    if (error_1 == 1 || !ps2x_1.read_gamepad(false, this->vibrate))
+        return;
+
     int LX_1 = int(this->ps2x_1.Analog(PSS_LX));
     int LY_1 = int(this->ps2x_1.Analog(PSS_LY));
     int RX_1 = int(this->ps2x_1.Analog(PSS_RX));
     int RY_1 = int(this->ps2x_1.Analog(PSS_RY));
 
-    if(LX_1 == 0 && LY_1 == 0&& RX_1 == 0&& RY_1 == 0) return;
-    if (this->controller_state == 0 && !ps2x_1.NewButtonState())
-    {
-        if (this->ps2x_1.ButtonPressed(PSB_L1))
-        {
-            this->controller_state = 1;
-        }
-        if (abs(LX_1 - JOY_CENTER_LX_1) >= abs(LY_1 - JOY_CENTER_LY_1) && abs(LX_1 - JOY_CENTER_LX_1) >= JOY_CENTER_THR)
-        {
-            int motor_value[4] = {0};
-            int turn_value = map(LX_1, 0, 255, -100, 100);
-            motor_value[0] = -1 * turn_value;
-            motor_value[1] = turn_value;
-            motor_value[2] = -1 * turn_value;
-            motor_value[3] = turn_value;
-            Serial.println("1:");
-            Serial.println(LX_1);
-            Serial.println(LY_1);
-            Serial.println(RX_1);
-            Serial.println(RY_1);
-            this->move_all(motor_value);
-        }
-        else if (abs(LX_1 - JOY_CENTER_LX_1) < abs(LY_1 - JOY_CENTER_LY_1) && abs(LY_1 - JOY_CENTER_LY_1) >= JOY_CENTER_THR)
-        {
-            int motor_value[4] = {0};
-            int turn_value = map(LY_1, 0, 255, -100, 100);
-            motor_value[0] = turn_value;
-            motor_value[1] = turn_value;
-            motor_value[2] = turn_value;
-            motor_value[3] = turn_value;
+    if (LX_1 == 0 && LY_1 == 0 && RX_1 == 0 && RY_1 == 0)
+        return;
 
-            if (abs(RX_1 - JOY_CENTER_RX_1) >= JOY_CENTER_THR)
+    if (controller_state_1 == 0) //player #1 finction
+    {
+        if (ps2x_1.Button(PSB_R3) && ps2x_1.Button(PSB_L3))
+            controller_state_1 == 1;
+
+        int max_power_value = ps2x_1.Button(PSB_L2) ? 100 : 50;
+        if (this->controller_body_state == 0 && !ps2x_1.NewButtonState())
+        {
+            if (this->ps2x_1.ButtonPressed(PSB_L1))
             {
-                int offset_value = map(RX_1, 0, 255, -100, 100);
-                if (offset_value >= 0)
+                this->controller_body_state = 1;
+            }
+            if (abs(LX_1 - JOY_CENTER_LX_1) >= abs(LY_1 - JOY_CENTER_LY_1) && abs(LX_1 - JOY_CENTER_LX_1) >= JOY_CENTER_THR)
+            {
+                int motor_value[4] = {0};
+                int turn_value = map(LX_1, 0, 255, -1 * max_power_value, max_power_value);
+                motor_value[0] = -1 * turn_value;
+                motor_value[1] = turn_value;
+                motor_value[2] = -1 * turn_value;
+                motor_value[3] = turn_value;
+                Serial.println("1:");
+                Serial.println(LX_1);
+                Serial.println(LY_1);
+                Serial.println(RX_1);
+                Serial.println(RY_1);
+                this->move_all(motor_value);
+            }
+            else if (abs(LX_1 - JOY_CENTER_LX_1) < abs(LY_1 - JOY_CENTER_LY_1) && abs(LY_1 - JOY_CENTER_LY_1) >= JOY_CENTER_THR)
+            {
+                int motor_value[4] = {0};
+                int turn_value = map(LY_1, 0, 255, -1 * max_power_value, max_power_value);
+                motor_value[0] = turn_value;
+                motor_value[1] = turn_value;
+                motor_value[2] = turn_value;
+                motor_value[3] = turn_value;
+
+                if (abs(RX_1 - JOY_CENTER_RX_1) >= JOY_CENTER_THR)
                 {
-                    // motor_value[0] -= offset_value;
-                    // motor_value[3] -= offset_value;
-                    motor_value[0] = int(float(motor_value[0]) * (130.0 - float(abs(offset_value))) / 100.0);
-                    motor_value[3] = int(float(motor_value[0]) * (130.0 - float(abs(offset_value))) / 100.0);
+                    int offset_value = map(RX_1, 0, 255, -100, 100);
+                    if (offset_value >= 0)
+                    {
+                        // motor_value[0] -= offset_value;
+                        // motor_value[3] -= offset_value;
+                        motor_value[0] = int(float(motor_value[0]) * (150.0 - float(abs(offset_value))) / 100.0);
+                        motor_value[3] = int(float(motor_value[0]) * (150.0 - float(abs(offset_value))) / 100.0);
+                    }
+                    else
+                    {
+                        // motor_value[1] -= offset_value;
+                        // motor_value[2] -= offset_value;
+                        motor_value[1] = int(float(motor_value[0]) * (150.0 - float(abs(offset_value))) / 100.0);
+                        motor_value[2] = int(float(motor_value[0]) * (150.0 - float(abs(offset_value))) / 100.0);
+                    }
+                }
+                Serial.print("2");
+
+                this->move_all(motor_value);
+            }
+            else if (abs(RX_1 - JOY_CENTER_RX_1) >= JOY_CENTER_THR)
+            {
+                int motor_value[4] = {0};
+                int turn_value = map(RX_1, 0, 255, -1 * max_power_value, max_power_value);
+                motor_value[0] = turn_value;
+                motor_value[1] = -1 * turn_value;
+                motor_value[2] = -1 * turn_value;
+                motor_value[3] = turn_value;
+                Serial.print("3");
+
+                this->move_all(motor_value);
+            }
+            // else if (this->ps2x_1.Button(PSB_L2))
+            // {
+            //     this->brake();
+            // }
+            else
+            {
+                int motor_value[4];
+                motor_value[0] = 0;
+                motor_value[1] = 0;
+                motor_value[2] = 0;
+                motor_value[3] = 0;
+                Serial.print("4");
+
+                this->move_all(motor_value);
+            }
+        }
+        else if (this->controller_body_state == 1 && !ps2x_1.NewButtonState())
+        {
+            if (this->ps2x_1.ButtonPressed(PSB_L1))
+            {
+                this->controller_body_state = 0;
+            }
+            if (abs(LX_1 - JOY_CENTER_LX_1) >= abs(LY_1 - JOY_CENTER_LY_1) && abs(LX_1 - JOY_CENTER_LX_1) >= JOY_CENTER_THR)
+            {
+                int motor_value[4] = {0};
+                int turn_value = map(LX_1, 0, 255, -1 * max_power_value, max_power_value);
+                motor_value[0] = turn_value;
+                motor_value[1] = -1 * turn_value;
+                motor_value[2] = turn_value;
+                motor_value[3] = -1 * turn_value;
+                Serial.print("5");
+
+                this->move_all(motor_value);
+            }
+            else if (abs(LX_1 - JOY_CENTER_LX_1) < abs(LY_1 - JOY_CENTER_LY_1) && abs(LY_1 - JOY_CENTER_LY_1) >= JOY_CENTER_THR)
+            {
+                int motor_value[4] = {0};
+                int turn_value = map(LY_1, 0, 255, -1 * max_power_value, max_power_value);
+                motor_value[0] = -1 * turn_value;
+                motor_value[1] = -1 * turn_value;
+                motor_value[2] = -1 * turn_value;
+                motor_value[3] = -1 * turn_value;
+
+                if (abs(RX_1 - JOY_CENTER_RX_1) >= JOY_CENTER_THR)
+                {
+                    int offset_value = map(RX_1, 0, 255, -100, 100);
+                    if (offset_value >= 0)
+                    {
+                        // motor_value[0] += offset_value;
+                        // motor_value[3] += offset_value;
+                        motor_value[1] = int(float(motor_value[0]) * (150.0 - float(abs(offset_value))) / 100.0);
+                        motor_value[2] = int(float(motor_value[0]) * (150.0 - float(abs(offset_value))) / 100.0);
+                    }
+                    else
+                    {
+                        // motor_value[1] += offset_value;
+                        // motor_value[2] += offset_value;
+                        motor_value[0] = int(float(motor_value[0]) * (150.0 - float(abs(offset_value))) / 100.0);
+                        motor_value[3] = int(float(motor_value[0]) * (150.0 - float(abs(offset_value))) / 100.0);
+                    }
+                }
+                Serial.print("6");
+
+                this->move_all(motor_value);
+            }
+            else if (abs(RX_1 - JOY_CENTER_RX_1) >= JOY_CENTER_THR)
+            {
+                int motor_value[4] = {0};
+                int turn_value = map(RX_1, 0, 255, -1 * max_power_value, max_power_value);
+                motor_value[0] = turn_value;
+                motor_value[1] = -1 * turn_value;
+                motor_value[2] = -1 * turn_value;
+                motor_value[3] = turn_value;
+
+                this->move_all(motor_value);
+            }
+            else if (this->ps2x_1.Button(PSB_L2))
+            {
+                this->brake();
+            }
+            else
+            {
+                int motor_value[4];
+                motor_value[0] = 0;
+                motor_value[1] = 0;
+                motor_value[2] = 0;
+                motor_value[3] = 0;
+
+                this->move_all(motor_value);
+            }
+        }
+
+        else if (this->ps2x_1.Button(PSB_R2))
+        {
+            if (this->ps2x_1.ButtonPressed(PSB_CROSS))
+            {
+                if (this->controller_arm_state == 1)
+                {
+                    this->controller_arm_state = 0;
+                    this->arm.foldMode();
                 }
                 else
                 {
-                    // motor_value[1] -= offset_value;
-                    // motor_value[2] -= offset_value;
-                    motor_value[1] = int(float(motor_value[0]) * (130.0 - float(abs(offset_value))) / 100.0);
-                    motor_value[2] = int(float(motor_value[0]) * (130.0 - float(abs(offset_value))) / 100.0);
+                    this->controller_arm_state = 1;
+                    this->arm.readyMode();
                 }
             }
-            Serial.print("2");
-
-            this->move_all(motor_value);
-        }
-        else if (abs(RX_1 - JOY_CENTER_RX_1) >= JOY_CENTER_THR)
-        {
-            int motor_value[4] = {0};
-            int turn_value = map(RX_1, 0, 255, -100, 100);
-            motor_value[0] = turn_value;
-            motor_value[1] = -1 * turn_value;
-            motor_value[2] = -1 * turn_value;
-            motor_value[3] = turn_value;
-            Serial.print("3");
-
-            this->move_all(motor_value);
-        }
-        else if (this->ps2x_1.Button(PSB_L2))
-        {
-            this->brake();
-        }
-        else
-        {
-            int motor_value[4];
-            motor_value[0] = 0;
-            motor_value[1] = 0;
-            motor_value[2] = 0;
-            motor_value[3] = 0;
-            Serial.print("4");
-
-            this->move_all(motor_value);
-        }
-    }
-    else if (this->controller_state == 1 && !ps2x_1.NewButtonState())
-    {
-        if (this->ps2x_1.ButtonPressed(PSB_L1))
-        {
-            this->controller_state = 0;
-        }
-        if (abs(LX_1 - JOY_CENTER_LX_1) >= abs(LY_1 - JOY_CENTER_LY_1) && abs(LX_1 - JOY_CENTER_LX_1) >= JOY_CENTER_THR)
-        {
-            int motor_value[4] = {0};
-            int turn_value = map(LX_1, 0, 255, -100, 100);
-            motor_value[0] = turn_value;
-            motor_value[1] = -1 * turn_value;
-            motor_value[2] = turn_value;
-            motor_value[3] = -1 * turn_value;
-            Serial.print("5");
-
-            this->move_all(motor_value);
-        }
-        else if (abs(LX_1 - JOY_CENTER_LX_1) < abs(LY_1 - JOY_CENTER_LY_1) && abs(LY_1 - JOY_CENTER_LY_1) >= JOY_CENTER_THR)
-        {
-            int motor_value[4] = {0};
-            int turn_value = map(LY_1, 0, 255, -100, 100);
-            motor_value[0] = -1 * turn_value;
-            motor_value[1] = -1 * turn_value;
-            motor_value[2] = -1 * turn_value;
-            motor_value[3] = -1 * turn_value;
-
-            if (abs(RX_1 - JOY_CENTER_RX_1) >= JOY_CENTER_THR)
+            else if (this->ps2x_1.ButtonPressed(PSB_SQUARE))
             {
-                int offset_value = map(RX_1, 0, 255, -100, 100);
-                if (offset_value >= 0)
+                if (this->controller_arm_state == 2)
                 {
-                    // motor_value[0] += offset_value;
-                    // motor_value[3] += offset_value;
-                    motor_value[1] = int(float(motor_value[0]) * (130.0 - float(abs(offset_value))) / 100.0);
-                    motor_value[2] = int(float(motor_value[0]) * (130.0 - float(abs(offset_value))) / 100.0);
+                    this->controller_arm_state = 0;
+                    this->arm.foldMode();
                 }
                 else
                 {
-                    // motor_value[1] += offset_value;
-                    // motor_value[2] += offset_value;
-                    motor_value[0] = int(float(motor_value[0]) * (130.0 - float(abs(offset_value))) / 100.0);
-                    motor_value[3] = int(float(motor_value[0]) * (130.0 - float(abs(offset_value))) / 100.0);
+                    this->controller_arm_state = 2;
+                    this->arm.switchMode();
                 }
             }
-            Serial.print("6");
-
-            this->move_all(motor_value);
-        }
-        else if (abs(RX_1 - JOY_CENTER_RX_1) >= JOY_CENTER_THR)
-        {
-            int motor_value[4] = {0};
-            int turn_value = map(RX_1, 0, 255, -100, 100);
-            motor_value[0] = turn_value;
-            motor_value[1] = -1 * turn_value;
-            motor_value[2] = -1 * turn_value;
-            motor_value[3] = turn_value;
-            Serial.print("7");
-
-            this->move_all(motor_value);
-        }
-        else if (this->ps2x_1.Button(PSB_L2))
-        {
-            this->brake();
-        }
-        else
-        {
-            int motor_value[4];
-            motor_value[0] = 0;
-            motor_value[1] = 0;
-            motor_value[2] = 0;
-            motor_value[3] = 0;
-            Serial.print("8");
-
-            this->move_all(motor_value);
-        }
-    }
-
-    else if (this->ps2x_1.Button(PSB_R2))
-    {
-        if (this->ps2x_1.ButtonPressed(PSB_SQUARE))
-        {
-            if (this->controller_arm_state == 0)
+            else if (this->ps2x_1.ButtonPressed(PSB_TRIANGLE))
             {
-                this->controller_arm_state = 1;
-                this->arm.readyMode();
+                if (this->controller_arm_state == 3)
+                {
+                    this->controller_arm_state = 0;
+                    this->arm.foldMode();
+                }
+                else
+                {
+                    this->controller_arm_state = 3;
+                    this->arm.catchMode();
+                }
             }
             else if (this->controller_arm_state == 1)
             {
                 this->controller_arm_state = 2;
                 this->arm.catchMode();
             }
-            else if (this->controller_arm_state == 2)
+            else if (this->ps2x_1.ButtonPressed(PSB_CIRCLE))
             {
-                this->controller_arm_state = 3;
-                this->arm.put();
-            }
-            else if (this->controller_arm_state == 3)
-            {
-                this->controller_arm_state = 0;
-                this->arm.foldMode();
+                if (this->controller_shovel_state == 0)
+                {
+                    this->controller_shovel_state = 1;
+                    this->shovel.ready();
+                }
+                else if (this->controller_shovel_state == 1)
+                {
+                    this->controller_shovel_state = 0;
+                    this->shovel.fold();
+                }
             }
         }
-        else if (this->ps2x_1.ButtonPressed(PSB_CIRCLE))
+        else
         {
-            if (this->controller_shovel_state == 0)
+            if (this->ps2x_1.ButtonPressed(PSB_SQUARE))
             {
-                this->controller_shovel_state = 1;
-                this->shovel.ready();
+                if (this->controller_arm_state == 1)
+                {
+                    this->arm.pick();
+                }
             }
-            else if (this->controller_shovel_state == 1)
+            else if (this->ps2x_1.ButtonPressed(PSB_CIRCLE))
             {
-                this->controller_shovel_state = 0;
-                this->shovel.fold();
+                if (this->controller_shovel_state == 1)
+                {
+                    this->shovel.pick();
+                }
+            }
+            // move shovel
+            if (ps2x_1.Button(PSB_PAD_UP))
+            {
+                if (this->controller_shovel_state == 1)
+                {
+                    this->shovel.move_up();
+                }
+            }
+            else if (ps2x_1.Button(PSB_PAD_DOWN))
+            {
+                if (this->controller_shovel_state == 1)
+                {
+                    this->shovel.move_down();
+                }
+            }
+            // bucket
+            if (this->ps2x_1.ButtonPressed(PSB_R1))
+            {
+                if (this->controller_bucket_state == 0)
+                {
+                    this->controller_bucket_state = 1;
+                    this->bucket.open();
+                }
+                else if (this->controller_bucket_state == 1)
+                {
+                    this->controller_bucket_state = 0;
+                    this->bucket.close();
+                }
             }
         }
     }
-    else
+    else if (controller_state_1 == 1) //player #2 finction
     {
-        if (this->ps2x_1.ButtonPressed(PSB_SQUARE))
+        if (ps2x_1.Button(PSB_R3) && ps2x_1.Button(PSB_L3))
+            controller_state_1 == 0;
+
+        if (abs(RY_1 - JOY_CENTER_RX_1) >= JOY_CENTER_THR)
         {
-            if (this->controller_arm_state == 1)
+            if (controller_arm_state == 2) // switch mode
             {
-                this->arm.pick();
+                //move arm up or down
+            }
+            else if (controller_arm_state == 3) // catch mode
+            {
+                //move arm up or down
             }
         }
-        else if (this->ps2x_1.ButtonPressed(PSB_CIRCLE))
-        {
-            if (this->controller_shovel_state == 1)
-            {
-                this->shovel.pick();
-            }
+        if (ps2x_1.ButtonPressed(PSB_L1))
+        { // catch and put
         }
-        // move shovel
-        if (ps2x_1.Button(PSB_PAD_UP))
+        if (abs(LY_1 - JOY_CENTER_RX_1) >= JOY_CENTER_THR)
         {
-            if (this->controller_arm_state == 2)
+            if (controller_arm_state == 3) // catch mode
             {
-                this->arm.verticalUp();
-            }
-        }
-        else if (ps2x_1.Button(PSB_PAD_DOWN))
-        {
-            if (this->controller_arm_state == 2)
-            {
-                this->arm.verticalDown();
-            }
-        }
-        // bucket
-        if (this->ps2x_1.ButtonPressed(PSB_R1))
-        {
-            if (this->controller_bucket_state == 0)
-            {
-                this->controller_bucket_state = 1;
-                this->bucket.open();
-            }
-            else if (this->controller_bucket_state == 1)
-            {
-                this->controller_bucket_state = 0;
-                this->bucket.close();
+                //move paw
             }
         }
     }
