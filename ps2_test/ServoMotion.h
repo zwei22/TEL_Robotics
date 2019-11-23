@@ -126,9 +126,7 @@ public:
     void clawCloseDx();
     void readyMode(int from_fold = 0);
     void foldMode();
-    void switchMode();
     void put();
-    void pick();
     void catchMode(int from_fold = 0);
     void verticalUp();
     void verticalDown();
@@ -153,9 +151,9 @@ public:
         shovel.Init(A, ids[2]);
     }
     Shovel() {}
-    
+
     void init(HardwareSerial &A, uint8_t ids[]);
-    
+
     void shovelUp();
     void shovelDown();
     void shovelUpdate(int dx);

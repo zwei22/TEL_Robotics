@@ -239,20 +239,6 @@ void Controller::checkPlayer(int error, PS2X &ps2x, int &controller_state)
         }
         else
         {
-            if (ps2x.ButtonPressed(PSB_SQUARE))
-            {
-                if (this->controller_arm_state == 1)
-                {
-                    this->arm.pick();
-                }
-            }
-            else if (ps2x.ButtonPressed(PSB_CIRCLE))
-            {
-                if (this->controller_shovel_state == 1)
-                {
-                    this->shovel.pick();
-                }
-            }
             // move shovel
             /*if (ps2x.Button(PSB_PAD_UP))
             {
@@ -311,7 +297,6 @@ void Controller::checkPlayer(int error, PS2X &ps2x, int &controller_state)
             }
         }
 
-        
         if (this->controller_arm_shovel_state == 0)
         {
             if (ps2x.ButtonPressed(PSB_L1))
@@ -319,19 +304,19 @@ void Controller::checkPlayer(int error, PS2X &ps2x, int &controller_state)
                 this->controller_arm_shovel_state = 1;
             }
             if (abs(LX_1 - JOY_CENTER_LX_1) >= JOY_CENTER_THR)
-        {
-            if (controller_arm_state == 2 || controller_arm_state == 1) // catch mode and ready mode
             {
-                if (LX_1 - JOY_CENTER_LX_1 > 0)
+                if (controller_arm_state == 2 || controller_arm_state == 1) // catch mode and ready mode
                 {
-                    arm.clawCloseDx();
-                }
-                else
-                {
-                    arm.clawOpenDx();
+                    if (LX_1 - JOY_CENTER_LX_1 > 0)
+                    {
+                        arm.clawCloseDx();
+                    }
+                    else
+                    {
+                        arm.clawOpenDx();
+                    }
                 }
             }
-        }
             if (abs(RY_1 - JOY_CENTER_RY_1) >= JOY_CENTER_THR)
             {
                 if (controller_arm_state == 1) // ready mode
@@ -395,11 +380,11 @@ void Controller::checkPlayer(int error, PS2X &ps2x, int &controller_state)
                     }
                 }
             }
-            if(ps2x.Button(PSB_PAD_UP))
+            if (ps2x.Button(PSB_PAD_UP))
             {
                 shovel.move_up();
             }
-            else if(ps2x.Button(PSB_PAD_DOWN))
+            else if (ps2x.Button(PSB_PAD_DOWN))
             {
                 shovel.move_down();
             }
