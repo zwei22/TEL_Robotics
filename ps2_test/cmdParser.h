@@ -8,8 +8,8 @@
 #define POS_ARM_SOULDER_H 500
 #define POS_ARM_SOULDER_V 100
 
-#define POS_SHOVEL_DOWN 790
-#define POS_SHOVEL_UP 300
+#define POS_SHOVEL_DOWN 300
+#define POS_SHOVEL_UP 800
 #define POS_SHOVEL_H 400 //horizental
 #define POS_SHOVEL_ELBOW_MIN 310
 #define POS_SHOVEL_ELBOW_MAX 1000
@@ -105,12 +105,12 @@ public:
     void ready()
     {
         claw.Move(POS_CLAW_PARALLEL, 500);
-        elbow.Move(0, 500);
+        elbow.Move(150, 500);
         shoulder.Move(POS_ARM_SOULDER_V, 500);
         delay(500);
         shoulder.Move(POS_ARM_SOULDER_H, 500);
         delay(500);
-        elbow.Move(960, 500);
+        elbow.Move(1000, 500);
         delay(500);
         shoulder.Move(POS_ARM_SOULDER_V, 500);
     }
@@ -120,7 +120,7 @@ public:
         claw.Move(POS_CLAW_PARALLEL, 500);
         shoulder.Move(POS_ARM_SOULDER_H, 500);
         delay(500);
-        elbow.Move(0, 500);
+        elbow.Move(150, 500);
         delay(1000);
         shoulder.Move(POS_ARM_SOULDER_V, 500);
     }
@@ -167,9 +167,9 @@ public:
     void shovelUpdate(int dx)
     {
         _shovel_pos += dx;
-        if (_shovel_pos >= POS_SHOVEL_DOWN) _shovel_pos = POS_SHOVEL_DOWN;
-        if (_shovel_pos <= POS_SHOVEL_UP) _shovel_pos = POS_SHOVEL_UP;
-        shovel.Move(_shovel_pos, 200);
+        if (_shovel_pos <= POS_SHOVEL_DOWN) _shovel_pos = POS_SHOVEL_DOWN;
+        if (_shovel_pos >= POS_SHOVEL_UP) _shovel_pos = POS_SHOVEL_UP;
+        shovel.Move(_shovel_pos, 0);
 
     }
     void ready()
@@ -193,11 +193,11 @@ public:
     }
     void move_up()
     {
-        shovelUpdate(-5);
+        shovelUpdate(10);
     }
     void move_down()
     {
-        shovelUpdate(5);
+        shovelUpdate(-10);
     }
 private:
     LobotSerialServo shovel;
